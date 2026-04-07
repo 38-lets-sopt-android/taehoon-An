@@ -1,25 +1,41 @@
 package com.example.letssopt
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,6 +43,8 @@ import com.example.letssopt.ui.components.AsButton
 import com.example.letssopt.ui.components.AsTextField
 import com.example.letssopt.ui.theme.*
 import com.example.letssopt.ui.theme.LETSSOPTTheme
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +52,19 @@ class SignUpActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LETSSOPTTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                val scope = rememberCoroutineScope()
+                val snackbarHostState = remember { SnackbarHostState() }
+
+                Scaffold(
+                    snackbarHost = { SnackbarHost(snackbarHostState) },
+                    modifier = Modifier.fillMaxSize()) { innerPadding ->
                     SignupContent(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        onShowSnack = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("모든 정보를 입력해주세요.")
+                            }
+                        }
                     )
                 }
             }
@@ -45,7 +73,15 @@ class SignUpActivity : ComponentActivity() {
 }
 
 @Composable
-fun SignupContent(modifier: Modifier = Modifier) {
+fun SignupContent(modifier: Modifier = Modifier,
+                  onShowSnack: (String) -> Unit) {
+    val context = LocalContext.current
+    val intent = Intent(context, LoginActivity::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+    }
+    val focusManager = LocalFocusManager.current
+    val scrollState = rememberScrollState()
+
     var textId by remember { mutableStateOf("") }
     var textPw by remember { mutableStateOf("") }
     var textPwCheck by remember { mutableStateOf("") }
@@ -54,7 +90,9 @@ fun SignupContent(modifier: Modifier = Modifier) {
     Column(modifier = modifier
         .fillMaxSize()
         .background(color = AsBg)
-        .padding(20.dp),
+        .padding(20.dp)
+        .imePadding()
+        .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
         ) {
@@ -64,54 +102,97 @@ fun SignupContent(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
             ) {
-            Text(style = MaterialTheme.typography.titleLarge.copy(fontSize = 36.sp, color = AsPrimary),
+            Text(style = MaterialTheme.typography.titleLarge.copy(fontSize = 36.sp
+                ,color = AsPrimary),
                 text = "watcha",
                 modifier = Modifier.padding(top = 40.dp).align(Alignment.CenterHorizontally))
             Text(style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
                 text = "회원가입",
+                color = AsWhite,
                 modifier = Modifier.padding(top = 20.dp))
             Text(style = MaterialTheme.typography.labelSmall,
                 text = "이메일",
+                color = AsSecondaryText,
                 modifier = Modifier.padding(top = 28.dp))
             AsTextField(text = textId,
                 onValueChange = { newText ->
                     textId = newText
                 },
                 "이메일 주소를 입력하세요",
+                true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                ),
                 modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
             Text(style = MaterialTheme.typography.labelSmall,
                 text = "비밀번호",
+                color = AsSecondaryText,
                 modifier = Modifier.padding(top = 12.dp))
             AsTextField(text = textPw,
                 onValueChange = { newText ->
                     textPw = newText
                 },
                 "비밀번호를 입력하세요",
+                false,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                ),
                 modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
             Text(style = MaterialTheme.typography.labelSmall,
                 text = "비밀번호 확인",
+                color = AsSecondaryText,
                 modifier = Modifier.padding(top = 12.dp))
             AsTextField(text = textPwCheck,
                 onValueChange = { newText ->
                     textPwCheck = newText
                 },
                 "비밀번호를 다시 입력하세요",
+                false,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { focusManager.clearFocus() }
+                ),
                 modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
         }
-        // 이쪽 부분에선
-        AsButton("회원가입", onClick = {},
+        // 이쪽 부분에선 래핑해줬던 레이아웃 제거
+        AsButton("회원가입",
+            onClick = {
+            intent.putExtra("id", textId)
+            intent.putExtra("pw", textPw)
+            context.startActivity(intent)
+        },
+            enabled = if(
+                Patterns.EMAIL_ADDRESS.matcher(textId).matches() &&
+                textPw.length >= 8 && textPw.length <= 12 &&
+                textPw == textPwCheck) true
+            else false,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 10.dp))
+                .padding(bottom = 10.dp, top = 20.dp)
 
+        )
     }
 
 }
+
 
 @Preview(showBackground = true)
 @Composable
 fun SignupContentPreview() {
     LETSSOPTTheme {
-        SignupContent()
+        SignupContent {
+
+        }
     }
 }
