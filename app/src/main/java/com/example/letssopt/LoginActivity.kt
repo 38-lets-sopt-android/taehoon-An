@@ -8,6 +8,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -66,6 +68,7 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
+    val interactionSource = remember { MutableInteractionSource() }
 
     val intent = Intent(context, SignUpActivity::class.java)
     val intent2 = Intent(context, MainActivity::class.java).apply {
@@ -95,7 +98,7 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 color = AsPrimary,
                 modifier = Modifier.padding(top = 40.dp).align(Alignment.CenterHorizontally))
             Text(style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
-                text = "이메일로 로그인",
+                text = "이메일 로 로그인",
                 color = AsWhite,
                 modifier = Modifier.padding(top = 20.dp))
             Text(style = MaterialTheme.typography.labelSmall,
@@ -141,14 +144,19 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ) {
-            TextButton(onClick = {
-                context.startActivity(intent)
-            }
-            ) {
-                Text(style = MaterialTheme.typography.labelSmall,
-                    color = AsSecondaryText,
-                    text = "아직 계정이 없으신가요? 회원가입")
-            }
+
+            Text(style = MaterialTheme.typography.labelSmall,
+                color = AsSecondaryText,
+                text = "아직 계정이 없으신가요? 회원가입",
+                modifier = Modifier
+                    .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                    onClick = { context.startActivity(intent) }
+                    )
+                    .padding(bottom = 10.dp)
+            )
+
             AsButton("로그인", onClick = {
 //                context.startActivity(intent2)
 //                Toast.makeText(context, "로그인 성공. 환영합니다. $textId 님.", Toast.LENGTH_SHORT)
