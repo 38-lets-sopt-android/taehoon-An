@@ -3,6 +3,7 @@ package com.example.letssopt
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -20,6 +22,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -56,13 +59,25 @@ class SignUpActivity : ComponentActivity() {
                 val snackbarHostState = remember { SnackbarHostState() }
 
                 Scaffold(
-                    snackbarHost = { SnackbarHost(snackbarHostState) },
+                    snackbarHost = {
+                        SnackbarHost(
+                            modifier = Modifier
+                                .navigationBarsPadding()
+                                .imePadding(),
+                            hostState = snackbarHostState
+                    ) {
+                        Snackbar(
+                            snackbarData = it,
+                            containerColor = AsSurface,
+                            contentColor = AsWhite
+                        )
+                    } },
                     modifier = Modifier.fillMaxSize()) { innerPadding ->
                     SignupContent(
                         modifier = Modifier.padding(innerPadding),
-                        onShowSnack = {
+                        onShowSnack = { message ->
                             scope.launch {
-                                snackbarHostState.showSnackbar("모든 정보를 입력해주세요.")
+                                snackbarHostState.showSnackbar(message)
                             }
                         }
                     )
@@ -168,15 +183,25 @@ fun SignupContent(modifier: Modifier = Modifier,
         // 이쪽 부분에선 래핑해줬던 레이아웃 제거
         AsButton("회원가입",
             onClick = {
-            intent.putExtra("id", textId)
-            intent.putExtra("pw", textPw)
-            context.startActivity(intent)
+                if(Patterns.EMAIL_ADDRESS.matcher(textId).matches() &&
+                    textPw.length >= 8 && textPw.length <= 12 &&
+                    textPw == textPwCheck) {
+
+                    Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
+
+                    intent.putExtra("id", textId)
+                    intent.putExtra("pw", textPw)
+                    context.startActivity(intent)
+                } else {
+                    onShowSnack("회원가입에 실패했습니다. 올바른 정보를 입력해주세요.")
+                }
+
         },
-            enabled = if(
-                Patterns.EMAIL_ADDRESS.matcher(textId).matches() &&
-                textPw.length >= 8 && textPw.length <= 12 &&
-                textPw == textPwCheck) true
-            else false,
+            enabled =
+                if(textId.isNotEmpty() &&
+                    textPw.isNotEmpty() &&
+                    textPwCheck.isNotEmpty()) true
+                else false,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 10.dp, top = 20.dp)
