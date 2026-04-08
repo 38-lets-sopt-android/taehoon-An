@@ -12,6 +12,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -52,7 +53,8 @@ class LoginActivity : ComponentActivity() {
             LETSSOPTTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     LoginContent(
-                        modifier = Modifier.padding(innerPadding),
+                        modifier = Modifier.padding(innerPadding)
+                            .consumeWindowInsets(innerPadding),
                         saveId = intent.getStringExtra("id"),
                         savePw = intent.getStringExtra("pw")
                     )
@@ -82,14 +84,14 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
         .fillMaxSize()
         .background(color = AsBg)
         .padding(20.dp)
-        .imePadding()
-        .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+        .imePadding(),
+        horizontalAlignment = Alignment.CenterHorizontally
         ) {
         //위쪽 컴포넌트 정렬을 위한 2차 레이아웃 wrapper
         Column(modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .weight(1f)
+            .verticalScroll(scrollState),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
             ) {
@@ -98,7 +100,7 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 color = AsPrimary,
                 modifier = Modifier.padding(top = 40.dp).align(Alignment.CenterHorizontally))
             Text(style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
-                text = "이메일 로 로그인",
+                text = "이메일로 로그인",
                 color = AsWhite,
                 modifier = Modifier.padding(top = 20.dp))
             Text(style = MaterialTheme.typography.labelSmall,
@@ -154,7 +156,7 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                     indication = null,
                     onClick = { context.startActivity(intent) }
                     )
-                    .padding(bottom = 10.dp)
+                    .padding(bottom = 10.dp, top = 10.dp)
             )
 
             AsButton("로그인", onClick = {

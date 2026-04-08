@@ -11,6 +11,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -74,7 +75,8 @@ class SignUpActivity : ComponentActivity() {
                     } },
                     modifier = Modifier.fillMaxSize()) { innerPadding ->
                     SignupContent(
-                        modifier = Modifier.padding(innerPadding),
+                        modifier = Modifier.padding(innerPadding)
+                            .consumeWindowInsets(innerPadding),
                         onShowSnack = { message ->
                             scope.launch {
                                 snackbarHostState.showSnackbar(message)
@@ -106,14 +108,14 @@ fun SignupContent(modifier: Modifier = Modifier,
         .fillMaxSize()
         .background(color = AsBg)
         .padding(20.dp)
-        .imePadding()
-        .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+        .imePadding(),
+        horizontalAlignment = Alignment.CenterHorizontally
         ) {
         //위쪽 컴포넌트 정렬을 위한 2차 레이아웃 wrapper
         Column(modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .verticalScroll(scrollState)
+            .weight(1f),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
             ) {
