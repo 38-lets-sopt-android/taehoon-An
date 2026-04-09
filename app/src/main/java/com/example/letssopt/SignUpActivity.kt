@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -47,7 +46,6 @@ import com.example.letssopt.ui.components.AsButton
 import com.example.letssopt.ui.components.AsTextField
 import com.example.letssopt.ui.theme.*
 import com.example.letssopt.ui.theme.LETSSOPTTheme
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class SignUpActivity : ComponentActivity() {
@@ -155,7 +153,7 @@ fun SignupContent(
                     textId = newText
                 },
                 hint = "이메일 주소를 입력하세요",
-                visible = true,
+                tfVisible = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
@@ -179,7 +177,7 @@ fun SignupContent(
                     textPw = newText
                 },
                 hint = "비밀번호를 입력하세요",
-                visible = false,
+                tfVisible = false,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Next
@@ -206,7 +204,7 @@ fun SignupContent(
                     textPwCheck = newText
                 },
                 hint = "비밀번호를 다시 입력하세요",
-                visible = false,
+                tfVisible = false,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
@@ -237,7 +235,7 @@ fun SignupContent(
                 }
 
         },
-            enabled =
+            btEnabled =
                 if(textId.isNotEmpty() &&
                     textPw.isNotEmpty() &&
                     textPwCheck.isNotEmpty()) true

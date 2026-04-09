@@ -24,7 +24,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -133,7 +132,7 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                     textId = newText
                 },
                 hint = "이메일 주소를 입력하세요",
-                visible = true,
+                tfVisible = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
@@ -160,7 +159,7 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                     textPw = newText
                 },
                 hint = "비밀번호를 입력하세요",
-                visible = false,
+                tfVisible = false,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done

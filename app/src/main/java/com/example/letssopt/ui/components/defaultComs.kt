@@ -31,7 +31,7 @@ import com.example.letssopt.ui.theme.LETSSOPTTheme
 fun AsButton(modifier: Modifier,
              text: String,
              onClick: () -> Unit,
-             enabled: Boolean = true,
+             btEgnabled: Boolean = true,
              ) {
     Button(
         onClick = onClick,
@@ -44,7 +44,7 @@ fun AsButton(modifier: Modifier,
             disabledContainerColor = AsDisable,
             contentColor = AsWhite,
             disabledContentColor = AsPlaceholder),
-        enabled = enabled
+        enabled = btEnabled
     ) {
         Text(
             text = text,
@@ -58,7 +58,8 @@ fun AsButton(modifier: Modifier,
 fun AsTextField(modifier: Modifier,
                 text: String,
                 onValueChange: (String) -> Unit,
-                hint: String, visible : Boolean,
+                hint: String,
+                tfVisible : Boolean,
                 keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
                 keyboardActions: KeyboardActions = KeyboardActions.Default,
                 ) {
@@ -85,7 +86,7 @@ fun AsTextField(modifier: Modifier,
             disabledIndicatorColor = Transparent
         ),
         maxLines = 1,
-        visualTransformation = if (visible) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation = if (tfVisible) VisualTransformation.None else PasswordVisualTransformation(),
         singleLine = true,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions
