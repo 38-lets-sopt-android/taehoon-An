@@ -51,9 +51,11 @@ class LoginActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LETSSOPTTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier
+                    .fillMaxSize()) { innerPadding ->
                     LoginContent(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier
+                            .padding(innerPadding)
                             .consumeWindowInsets(innerPadding),
                         saveId = intent.getStringExtra("id"),
                         savePw = intent.getStringExtra("pw")
@@ -98,28 +100,34 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
             ) {
             //로고
             Text(
-                modifier = Modifier.padding(top = 40.dp).align(Alignment.CenterHorizontally),
+                modifier = Modifier
+                    .padding(top = 40.dp)
+                    .align(Alignment.CenterHorizontally),
                 style = MaterialTheme.typography.titleLarge.copy(fontSize = 36.sp, color = AsPrimary),
                 text = "watcha",
                 color = AsPrimary
                 )
 
             Text(
-                modifier = Modifier.padding(top = 20.dp),
+                modifier = Modifier
+                    .padding(top = 20.dp),
                 style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
                 text = "이메일로 로그인",
                 color = AsWhite
                 )
             //텍스트필드 섹션
             Text(
-                modifier = Modifier.padding(top = 28.dp),
+                modifier = Modifier
+                    .padding(top = 28.dp),
                 style = MaterialTheme.typography.labelSmall,
                 text = "이메일",
                 color = AsSecondaryText
             )
 
             AsTextField(
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp),
                 text = textId,
                 onValueChange = { newText ->
                     textId = newText
@@ -136,14 +144,17 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
             )
 
             Text(
-                modifier = Modifier.padding(top = 12.dp),
+                modifier = Modifier
+                    .padding(top = 12.dp),
                 style = MaterialTheme.typography.labelSmall,
                 text = "비밀번호",
                 color = AsSecondaryText
             )
 
             AsTextField(
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp),
                 text = textPw,
                 onValueChange = { newText ->
                     textPw = newText
