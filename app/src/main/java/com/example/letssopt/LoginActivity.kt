@@ -39,8 +39,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.letssopt.ui.components.AsButton
-import com.example.letssopt.ui.components.AsTextField
+import com.example.letssopt.ui.components.DefaultButton
+import com.example.letssopt.ui.components.DefaultTextField
 import com.example.letssopt.ui.theme.*
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
@@ -48,7 +48,11 @@ class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
+        Log.d("LoginActivity", "onCreate: ${intent.getStringExtra("id")} and ${intent.getStringExtra("pw")}")
+        var tempId = intent.getStringExtra("id")
+        var tempPw = intent.getStringExtra("pw")
+
+        setContent {g
             LETSSOPTTheme {
                 Scaffold(modifier = Modifier
                     .fillMaxSize()) { innerPadding ->
@@ -56,10 +60,9 @@ class LoginActivity : ComponentActivity() {
                         modifier = Modifier
                             .padding(innerPadding)
                             .consumeWindowInsets(innerPadding),
-                        saveId = intent.getStringExtra("id"),
-                        savePw = intent.getStringExtra("pw")
+                        saveId = tempId,
+                        savePw = tempPw
                     )
-                    Log.d("LoginActivity", "onCreate: ${intent.getStringExtra("id")} and ${intent.getStringExtra("pw")}")
                 }
             }
         }
@@ -123,7 +126,7 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 color = AsSecondaryText
             )
 
-            AsTextField(
+            DefaultTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
@@ -150,7 +153,7 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 color = AsSecondaryText
             )
 
-            AsTextField(
+            DefaultTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
@@ -190,7 +193,7 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
 
             )
 
-            AsButton(modifier = Modifier
+            DefaultButton(modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 10.dp),
                 text = "로그인",

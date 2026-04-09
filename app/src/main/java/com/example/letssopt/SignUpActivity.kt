@@ -42,8 +42,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.letssopt.ui.components.AsButton
-import com.example.letssopt.ui.components.AsTextField
+import com.example.letssopt.ui.components.DefaultButton
+import com.example.letssopt.ui.components.DefaultTextField
 import com.example.letssopt.ui.theme.*
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 import kotlinx.coroutines.launch
@@ -144,7 +144,7 @@ fun SignupContent(
                 color = AsSecondaryText
             )
 
-            AsTextField(
+            DefaultTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
@@ -168,7 +168,7 @@ fun SignupContent(
                 modifier = Modifier.padding(top = 12.dp)
             )
 
-            AsTextField(
+            DefaultTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
@@ -195,7 +195,7 @@ fun SignupContent(
                 color = AsSecondaryText
             )
 
-            AsTextField(
+            DefaultTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
@@ -215,7 +215,7 @@ fun SignupContent(
             )
         }
         // 이쪽 부분에선 래핑해줬던 레이아웃 제거
-        AsButton(
+        DefaultButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 10.dp, top = 20.dp),

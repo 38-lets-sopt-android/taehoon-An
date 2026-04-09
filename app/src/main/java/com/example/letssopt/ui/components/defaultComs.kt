@@ -2,7 +2,6 @@ package com.example.letssopt.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -28,10 +27,10 @@ import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 @Composable
-fun AsButton(modifier: Modifier,
-             text: String,
-             onClick: () -> Unit,
-             btEgnabled: Boolean = true,
+fun DefaultButton(modifier: Modifier,
+                  text: String,
+                  onClick: () -> Unit,
+                  btEnabled: Boolean = true,
              ) {
     Button(
         onClick = onClick,
@@ -44,7 +43,7 @@ fun AsButton(modifier: Modifier,
             disabledContainerColor = AsDisable,
             contentColor = AsWhite,
             disabledContentColor = AsPlaceholder),
-        enabled = btEnabled
+            enabled = btEnabled
     ) {
         Text(
             text = text,
@@ -55,19 +54,17 @@ fun AsButton(modifier: Modifier,
 }
 
 @Composable
-fun AsTextField(modifier: Modifier,
-                text: String,
-                onValueChange: (String) -> Unit,
-                hint: String,
-                tfVisible : Boolean,
-                keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-                keyboardActions: KeyboardActions = KeyboardActions.Default,
+fun DefaultTextField(modifier: Modifier,
+                     text: String,
+                     onValueChange: (String) -> Unit,
+                     hint: String,
+                     tfVisible : Boolean,
+                     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+                     keyboardActions: KeyboardActions = KeyboardActions.Default,
                 ) {
     TextField(
         value = text,
-        onValueChange = { newText ->
-            onValueChange(newText)
-        },
+        onValueChange = onValueChange,
         shape = MaterialTheme.shapes.small,
         modifier = modifier.height(52.dp),
         textStyle = MaterialTheme.typography.labelSmall.copy(color = AsWhite),
@@ -85,7 +82,6 @@ fun AsTextField(modifier: Modifier,
             unfocusedIndicatorColor = Transparent,
             disabledIndicatorColor = Transparent
         ),
-        maxLines = 1,
         visualTransformation = if (tfVisible) VisualTransformation.None else PasswordVisualTransformation(),
         singleLine = true,
         keyboardOptions = keyboardOptions,
@@ -96,16 +92,16 @@ fun AsTextField(modifier: Modifier,
 
 @Preview(showBackground = true)
 @Composable
-private fun AsButtonPreview() {
+private fun DefaultButtonPreview() {
     LETSSOPTTheme {
-        AsButton(Modifier.padding(), "임시 버튼", onClick = {}, false)
+        DefaultButton(Modifier, "임시 버튼", onClick = {}, false)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun AsTFPreview() {
+private fun DefaultTFPreview() {
     LETSSOPTTheme {
-        AsTextField(Modifier.padding(), "", {}, "아이디 입력해주세요", true, KeyboardOptions.Default, KeyboardActions.Default )
+        DefaultTextField(Modifier, "", {}, "아이디 입력해주세요", true, KeyboardOptions.Default, KeyboardActions.Default )
     }
 }
