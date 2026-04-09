@@ -148,8 +148,8 @@ fun SignupContent(
                 onValueChange = { newText ->
                     textId = newText
                 },
-                "이메일 주소를 입력하세요",
-                true,
+                hint = "이메일 주소를 입력하세요",
+                visible = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
@@ -170,8 +170,8 @@ fun SignupContent(
                 onValueChange = { newText ->
                     textPw = newText
                 },
-                "비밀번호를 입력하세요",
-                false,
+                hint = "비밀번호를 입력하세요",
+                visible = false,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Next
@@ -194,8 +194,8 @@ fun SignupContent(
                 onValueChange = { newText ->
                     textPwCheck = newText
                 },
-                "비밀번호를 다시 입력하세요",
-                false,
+                hint = "비밀번호를 다시 입력하세요",
+                visible = false,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done

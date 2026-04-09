@@ -124,8 +124,8 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 onValueChange = { newText ->
                     textId = newText
                 },
-                "이메일 주소를 입력하세요",
-                true,
+                hint = "이메일 주소를 입력하세요",
+                visible = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
@@ -148,8 +148,8 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 onValueChange = { newText ->
                     textPw = newText
                 },
-                "비밀번호를 입력하세요",
-                false,
+                hint = "비밀번호를 입력하세요",
+                visible = false,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
@@ -185,24 +185,20 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 .padding(bottom = 10.dp),
                 text = "로그인",
                 onClick = {
-//                context.startActivity(intent2)
-//                Toast.makeText(context, "로그인 성공. 환영합니다. $textId 님.", Toast.LENGTH_SHORT)
-
-                Log.d("LoginActivity", "onCreate: $saveId and $savePw")
-
-                if(saveId == null || savePw == null) {
-                    Toast.makeText(context, "회원가입이 필요합니다.", Toast.LENGTH_LONG).show()
-                } else {
-                    if(saveId == textId && savePw != textPw) {
-                        Toast.makeText(context, "비밀번호가 틀렸습니다. 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
-                    } else if(saveId == textId && savePw == textPw) {
-                        context.startActivity(intent2)
-                        Toast.makeText(context, "로그인 성공. 환영합니다. $textId 님.", Toast.LENGTH_SHORT).show()
+                    if(saveId == null || savePw == null) {
+                        Toast.makeText(context, "회원가입이 필요합니다.", Toast.LENGTH_LONG).show()
                     } else {
-                        Toast.makeText(context, "로그인 실패. 다시 시도해주세요", Toast.LENGTH_SHORT).show()
+                        if(saveId == textId && savePw != textPw) {
+                            Toast.makeText(context, "비밀번호가 틀렸습니다. 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
+                        } else if(saveId == textId && savePw == textPw) {
+                            context.startActivity(intent2)
+                            Toast.makeText(context, "로그인 성공. 환영합니다. $textId 님.", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, "로그인 실패. 다시 시도해주세요", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
-            } )
+            )
         }
     }
 
