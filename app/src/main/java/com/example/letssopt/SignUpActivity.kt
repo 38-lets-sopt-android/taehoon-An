@@ -119,19 +119,26 @@ fun SignupContent(modifier: Modifier = Modifier,
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
             ) {
-            Text(style = MaterialTheme.typography.titleLarge.copy(fontSize = 36.sp
-                ,color = AsPrimary),
+            Text(
+                modifier = Modifier.padding(top = 40.dp).align(Alignment.CenterHorizontally),
+                style = MaterialTheme.typography.titleLarge.copy(fontSize = 36.sp ,color = AsPrimary),
                 text = "watcha",
-                modifier = Modifier.padding(top = 40.dp).align(Alignment.CenterHorizontally))
-            Text(style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
+                )
+            Text(
+                modifier = Modifier.padding(top = 20.dp),
+                style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
                 text = "회원가입",
-                color = AsWhite,
-                modifier = Modifier.padding(top = 20.dp))
-            Text(style = MaterialTheme.typography.labelSmall,
+                color = AsWhite
+            )
+            Text(
+                modifier = Modifier.padding(top = 28.dp),
+                style = MaterialTheme.typography.labelSmall,
                 text = "이메일",
-                color = AsSecondaryText,
-                modifier = Modifier.padding(top = 28.dp))
-            AsTextField(text = textId,
+                color = AsSecondaryText
+            )
+            AsTextField(
+                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                text = textId,
                 onValueChange = { newText ->
                     textId = newText
                 },
@@ -143,13 +150,15 @@ fun SignupContent(modifier: Modifier = Modifier,
                 ),
                 keyboardActions = KeyboardActions(
                     onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                ),
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
+                )
+            )
             Text(style = MaterialTheme.typography.labelSmall,
                 text = "비밀번호",
                 color = AsSecondaryText,
                 modifier = Modifier.padding(top = 12.dp))
-            AsTextField(text = textPw,
+            AsTextField(
+                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                text = textPw,
                 onValueChange = { newText ->
                     textPw = newText
                 },
@@ -161,13 +170,17 @@ fun SignupContent(modifier: Modifier = Modifier,
                 ),
                 keyboardActions = KeyboardActions(
                     onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                ),
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
-            Text(style = MaterialTheme.typography.labelSmall,
+                )
+            )
+            Text(
+                modifier = Modifier.padding(top = 12.dp),
+                style = MaterialTheme.typography.labelSmall,
                 text = "비밀번호 확인",
-                color = AsSecondaryText,
-                modifier = Modifier.padding(top = 12.dp))
-            AsTextField(text = textPwCheck,
+                color = AsSecondaryText
+                )
+            AsTextField(
+                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                text = textPwCheck,
                 onValueChange = { newText ->
                     textPwCheck = newText
                 },
@@ -179,11 +192,15 @@ fun SignupContent(modifier: Modifier = Modifier,
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = { focusManager.clearFocus() }
-                ),
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
+                )
+            )
         }
         // 이쪽 부분에선 래핑해줬던 레이아웃 제거
-        AsButton("회원가입",
+        AsButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp, top = 20.dp),
+            "회원가입",
             onClick = {
                 if(Patterns.EMAIL_ADDRESS.matcher(textId).matches() &&
                     textPw.length >= 8 && textPw.length <= 12 &&
@@ -203,11 +220,7 @@ fun SignupContent(modifier: Modifier = Modifier,
                 if(textId.isNotEmpty() &&
                     textPw.isNotEmpty() &&
                     textPwCheck.isNotEmpty()) true
-                else false,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 10.dp, top = 20.dp)
-
+                else false
         )
     }
 

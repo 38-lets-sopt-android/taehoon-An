@@ -95,19 +95,27 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
             ) {
-            Text(style = MaterialTheme.typography.titleLarge.copy(fontSize = 36.sp, color = AsPrimary),
+            Text(
+                modifier = Modifier.padding(top = 40.dp).align(Alignment.CenterHorizontally),
+                style = MaterialTheme.typography.titleLarge.copy(fontSize = 36.sp, color = AsPrimary),
                 text = "watcha",
-                color = AsPrimary,
-                modifier = Modifier.padding(top = 40.dp).align(Alignment.CenterHorizontally))
-            Text(style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
+                color = AsPrimary
+                )
+            Text(
+                modifier = Modifier.padding(top = 20.dp),
+                style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
                 text = "이메일로 로그인",
-                color = AsWhite,
-                modifier = Modifier.padding(top = 20.dp))
-            Text(style = MaterialTheme.typography.labelSmall,
+                color = AsWhite
+                )
+            Text(
+                modifier = Modifier.padding(top = 28.dp),
+                style = MaterialTheme.typography.labelSmall,
                 text = "이메일",
-                color = AsSecondaryText,
-                modifier = Modifier.padding(top = 28.dp))
-            AsTextField(text = textId,
+                color = AsSecondaryText
+            )
+            AsTextField(
+                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                text = textId,
                 onValueChange = { newText ->
                     textId = newText
                 },
@@ -119,13 +127,17 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 ),
                 keyboardActions = KeyboardActions(
                     onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                ),
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
-            Text(style = MaterialTheme.typography.labelSmall,
+                )
+            )
+            Text(
+                modifier = Modifier.padding(top = 12.dp),
+                style = MaterialTheme.typography.labelSmall,
                 text = "비밀번호",
-                color = AsSecondaryText,
-                modifier = Modifier.padding(top = 12.dp))
-            AsTextField(text = textPw,
+                color = AsSecondaryText
+                )
+            AsTextField(
+                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                text = textPw,
                 onValueChange = { newText ->
                     textPw = newText
                 },
@@ -137,8 +149,8 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = { focusManager.clearFocus() }
-                ),
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp))
+                )
+            )
         }
         //여기 두번쨰 컬럼에서 지정하지도 않은 padding이 양쪽 너비에 들어가서 로그인 버튼이 이상한 패딩이 적용됨
         Column(modifier = Modifier
@@ -147,19 +159,24 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
             verticalArrangement = Arrangement.Bottom
         ) {
 
-            Text(style = MaterialTheme.typography.labelSmall,
-                color = AsSecondaryText,
-                text = "아직 계정이 없으신가요? 회원가입",
-                modifier = Modifier
-                    .clickable(
+            Text(modifier = Modifier
+                .clickable(
                     interactionSource = interactionSource,
                     indication = null,
                     onClick = { context.startActivity(intent) }
-                    )
-                    .padding(bottom = 10.dp, top = 10.dp)
+                )
+                .padding(bottom = 10.dp, top = 10.dp),
+                style = MaterialTheme.typography.labelSmall,
+                color = AsSecondaryText,
+                text = "아직 계정이 없으신가요? 회원가입"
+
             )
 
-            AsButton("로그인", onClick = {
+            AsButton(modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp),
+                text = "로그인",
+                onClick = {
 //                context.startActivity(intent2)
 //                Toast.makeText(context, "로그인 성공. 환영합니다. $textId 님.", Toast.LENGTH_SHORT)
 
@@ -177,11 +194,7 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                         Toast.makeText(context, "로그인 실패. 다시 시도해주세요", Toast.LENGTH_SHORT).show()
                     }
                 }
-
-            },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp))
+            } )
         }
     }
 

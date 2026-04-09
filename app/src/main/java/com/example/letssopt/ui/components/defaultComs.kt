@@ -28,10 +28,11 @@ import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 @Composable
-fun AsButton(text: String,
+fun AsButton(modifier: Modifier,
+             text: String,
              onClick: () -> Unit,
              enabled: Boolean = true,
-             modifier: Modifier) {
+             ) {
     Button(
         onClick = onClick,
         modifier = modifier
@@ -54,12 +55,13 @@ fun AsButton(text: String,
 }
 
 @Composable
-fun AsTextField(text: String,
+fun AsTextField(modifier: Modifier,
+                text: String,
                 onValueChange: (String) -> Unit,
                 hint: String, visible : Boolean,
                 keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
                 keyboardActions: KeyboardActions = KeyboardActions.Default,
-                modifier: Modifier) {
+                ) {
     TextField(
         value = text,
         onValueChange = { newText ->
@@ -95,7 +97,7 @@ fun AsTextField(text: String,
 @Composable
 private fun AsButtonPreview() {
     LETSSOPTTheme {
-        AsButton("임시 버튼", onClick = {}, false, Modifier.padding())
+        AsButton(Modifier.padding(), "임시 버튼", onClick = {}, false)
     }
 }
 
@@ -103,6 +105,6 @@ private fun AsButtonPreview() {
 @Composable
 private fun AsTFPreview() {
     LETSSOPTTheme {
-        AsTextField("", {}, "아이디 입력해주세요", true, KeyboardOptions.Default, KeyboardActions.Default, Modifier.padding() )
+        AsTextField(Modifier.padding(), "", {}, "아이디 입력해주세요", true, KeyboardOptions.Default, KeyboardActions.Default )
     }
 }
