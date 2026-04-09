@@ -216,7 +216,7 @@ fun SignupContent(modifier: Modifier = Modifier,
 
 @Preview(showBackground = true)
 @Composable
-fun SignupContentPreview() {
+private fun SignupContentPreview() {
     LETSSOPTTheme {
         SignupContent {
 

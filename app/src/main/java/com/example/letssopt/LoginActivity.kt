@@ -189,7 +189,7 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
 
 @Preview(showBackground = true)
 @Composable
-fun LoginContentPreview() {
+private fun LoginContentPreview() {
     LETSSOPTTheme {
         LoginContent(saveId = "id", savePw = "pw")
     }

@@ -93,7 +93,7 @@ fun AsTextField(text: String,
 
 @Preview(showBackground = true)
 @Composable
-fun AsButtonPreview() {
+private fun AsButtonPreview() {
     LETSSOPTTheme {
         AsButton("임시 버튼", onClick = {}, false, Modifier.padding())
     }
@@ -101,7 +101,7 @@ fun AsButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun AsTFPreview() {
+private fun AsTFPreview() {
     LETSSOPTTheme {
         AsTextField("", {}, "아이디 입력해주세요", true, KeyboardOptions.Default, KeyboardActions.Default, Modifier.padding() )
     }

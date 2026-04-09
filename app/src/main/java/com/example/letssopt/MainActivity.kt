@@ -86,7 +86,7 @@ fun MainContent(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun MainContentPreview() {
+private fun MainContentPreview() {
     LETSSOPTTheme {
         MainContent()
     }
