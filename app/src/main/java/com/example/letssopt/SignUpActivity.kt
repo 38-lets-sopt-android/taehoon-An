@@ -93,9 +93,7 @@ fun SignupContent(
     onShowSnack: (String) -> Unit
 ) {
     val context = LocalContext.current
-    val intent = Intent(context, LoginActivity::class.java).apply {
-        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-    }
+
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
 
@@ -221,28 +219,48 @@ fun SignupContent(
                 .padding(bottom = 10.dp, top = 20.dp),
             "회원가입",
             onClick = {
-                if(Patterns.EMAIL_ADDRESS.matcher(textId).matches() &&
-                    textPw.length >= 8 && textPw.length <= 12 &&
-                    textPw == textPwCheck) {
-
-                    Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
-
-                    intent.putExtra("id", textId)
-                    intent.putExtra("pw", textPw)
-                    context.startActivity(intent)
-                } else {
-                    onShowSnack("회원가입에 실패했습니다. 올바른 정보를 입력해주세요.")
+                val intent = Intent(context, LoginActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 }
 
+                validateSignUp(
+                    context = context,
+                    textId = textId,
+                    textPw = textPw,
+                    textPwCheck = textPwCheck,
+                    successIntent = intent,
+                    onShowSnack = onShowSnack
+                )
+
         },
-            btEnabled =
-                if(textId.isNotEmpty() &&
+            btEnabled = textId.isNotEmpty() &&
                     textPw.isNotEmpty() &&
-                    textPwCheck.isNotEmpty()) true
-                else false
+                    textPwCheck.isNotEmpty()
         )
     }
+}
 
+private fun validateSignUp(
+    context: android.content.Context,
+    textId: String,
+    textPw: String,
+    textPwCheck: String,
+    successIntent: android.content.Intent,
+    onShowSnack: (String) -> Unit
+) {
+    if (android.util.Patterns.EMAIL_ADDRESS.matcher(textId).matches() &&
+        textPw.length in 8..12 && // 💡 코틀린 스타일로 더 깔끔하게 다듬었습니다.
+        textPw == textPwCheck
+    ) {
+        android.widget.Toast.makeText(context, "회원가입 성공!", android.widget.Toast.LENGTH_SHORT).show()
+
+        successIntent.putExtra("id", textId)
+        successIntent.putExtra("pw", textPw)
+
+        context.startActivity(successIntent)
+    } else {
+        onShowSnack("회원가입에 실패했습니다. 올바른 정보를 입력해주세요.")
+    }
 }
 
 

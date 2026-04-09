@@ -52,7 +52,7 @@ class LoginActivity : ComponentActivity() {
         var tempId = intent.getStringExtra("id")
         var tempPw = intent.getStringExtra("pw")
 
-        setContent {g
+        setContent {
             LETSSOPTTheme {
                 Scaffold(modifier = Modifier
                     .fillMaxSize()) { innerPadding ->
@@ -75,11 +75,6 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
     val interactionSource = remember { MutableInteractionSource() }
-
-    val intent = Intent(context, SignUpActivity::class.java)
-    val intent2 = Intent(context, MainActivity::class.java).apply {
-        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-    }
 
     var textId by remember { mutableStateOf("") }
     var textPw by remember { mutableStateOf("") }
@@ -184,7 +179,10 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
-                    onClick = { context.startActivity(intent) }
+                    onClick = {
+                        val intent = Intent(context, SignUpActivity::class.java)
+                        context.startActivity(intent)
+                    }
                 )
                 .padding(bottom = 10.dp, top = 10.dp),
                 style = MaterialTheme.typography.labelSmall,
@@ -198,23 +196,44 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 .padding(bottom = 10.dp),
                 text = "로그인",
                 onClick = {
-                    if(saveId == null || savePw == null) {
-                        Toast.makeText(context, "회원가입이 필요합니다.", Toast.LENGTH_LONG).show()
-                    } else {
-                        if(saveId == textId && savePw != textPw) {
-                            Toast.makeText(context, "비밀번호가 틀렸습니다. 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
-                        } else if(saveId == textId && savePw == textPw) {
-                            context.startActivity(intent2)
-                            Toast.makeText(context, "로그인 성공. 환영합니다. $textId 님.", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(context, "로그인 실패. 다시 시도해주세요", Toast.LENGTH_SHORT).show()
-                        }
+                    val intent2 = Intent(context, MainActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                     }
+
+                    validateLogin(
+                        context = context,
+                        saveId = saveId,
+                        savePw = savePw,
+                        textId = textId,
+                        textPw = textPw,
+                        successIntent = intent2
+                    )
                 }
             )
         }
     }
+}
 
+private fun validateLogin(
+    context: android.content.Context,
+    saveId: String?,
+    savePw: String?,
+    textId: String,
+    textPw: String,
+    successIntent: android.content.Intent
+) {
+    if (saveId == null || savePw == null) {
+        Toast.makeText(context, "회원가입이 필요합니다.", Toast.LENGTH_LONG).show()
+    } else {
+        if (saveId == textId && savePw != textPw) {
+            Toast.makeText(context, "비밀번호가 틀렸습니다. 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
+        } else if (saveId == textId && savePw == textPw) {
+            context.startActivity(successIntent)
+            Toast.makeText(context, "로그인 성공. 환영합니다. $textId 님.", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "로그인 실패. 다시 시도해주세요", Toast.LENGTH_SHORT).show()
+        }
+    }
 }
 
 @Preview(showBackground = true)
