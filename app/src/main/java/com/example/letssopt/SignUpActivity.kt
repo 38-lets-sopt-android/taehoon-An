@@ -74,15 +74,15 @@ class SignUpActivity : ComponentActivity() {
                         )
                     } },
                     modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    SignupContent(
-                        modifier = Modifier.padding(innerPadding)
-                            .consumeWindowInsets(innerPadding),
-                        onShowSnack = { message ->
-                            scope.launch {
-                                snackbarHostState.showSnackbar(message)
+                        SignupContent(
+                            modifier = Modifier.padding(innerPadding)
+                                .consumeWindowInsets(innerPadding),
+                            onShowSnack = { message ->
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(message)
+                                }
                             }
-                        }
-                    )
+                        )
                 }
             }
         }
@@ -90,8 +90,10 @@ class SignUpActivity : ComponentActivity() {
 }
 
 @Composable
-fun SignupContent(modifier: Modifier = Modifier,
-                  onShowSnack: (String) -> Unit) {
+fun SignupContent(
+    modifier: Modifier = Modifier,
+    onShowSnack: (String) -> Unit
+) {
     val context = LocalContext.current
     val intent = Intent(context, LoginActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -119,23 +121,27 @@ fun SignupContent(modifier: Modifier = Modifier,
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
             ) {
+            //로고
             Text(
                 modifier = Modifier.padding(top = 40.dp).align(Alignment.CenterHorizontally),
                 style = MaterialTheme.typography.titleLarge.copy(fontSize = 36.sp ,color = AsPrimary),
-                text = "watcha",
-                )
+                text = "watcha"
+            )
+
             Text(
                 modifier = Modifier.padding(top = 20.dp),
                 style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
                 text = "회원가입",
                 color = AsWhite
             )
+            //텍스트필드 섹션
             Text(
                 modifier = Modifier.padding(top = 28.dp),
                 style = MaterialTheme.typography.labelSmall,
                 text = "이메일",
                 color = AsSecondaryText
             )
+
             AsTextField(
                 modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                 text = textId,
@@ -155,7 +161,9 @@ fun SignupContent(modifier: Modifier = Modifier,
             Text(style = MaterialTheme.typography.labelSmall,
                 text = "비밀번호",
                 color = AsSecondaryText,
-                modifier = Modifier.padding(top = 12.dp))
+                modifier = Modifier.padding(top = 12.dp)
+            )
+
             AsTextField(
                 modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                 text = textPw,
@@ -172,12 +180,14 @@ fun SignupContent(modifier: Modifier = Modifier,
                     onNext = { focusManager.moveFocus(FocusDirection.Down) }
                 )
             )
+
             Text(
                 modifier = Modifier.padding(top = 12.dp),
                 style = MaterialTheme.typography.labelSmall,
                 text = "비밀번호 확인",
                 color = AsSecondaryText
-                )
+            )
+
             AsTextField(
                 modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                 text = textPwCheck,

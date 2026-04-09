@@ -76,6 +76,7 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
     val intent2 = Intent(context, MainActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
     }
+
     var textId by remember { mutableStateOf("") }
     var textPw by remember { mutableStateOf("") }
 
@@ -95,24 +96,28 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
             ) {
+            //로고
             Text(
                 modifier = Modifier.padding(top = 40.dp).align(Alignment.CenterHorizontally),
                 style = MaterialTheme.typography.titleLarge.copy(fontSize = 36.sp, color = AsPrimary),
                 text = "watcha",
                 color = AsPrimary
                 )
+
             Text(
                 modifier = Modifier.padding(top = 20.dp),
                 style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
                 text = "이메일로 로그인",
                 color = AsWhite
                 )
+            //텍스트필드 섹션
             Text(
                 modifier = Modifier.padding(top = 28.dp),
                 style = MaterialTheme.typography.labelSmall,
                 text = "이메일",
                 color = AsSecondaryText
             )
+
             AsTextField(
                 modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                 text = textId,
@@ -129,12 +134,14 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                     onNext = { focusManager.moveFocus(FocusDirection.Down) }
                 )
             )
+
             Text(
                 modifier = Modifier.padding(top = 12.dp),
                 style = MaterialTheme.typography.labelSmall,
                 text = "비밀번호",
                 color = AsSecondaryText
-                )
+            )
+
             AsTextField(
                 modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                 text = textPw,
@@ -152,6 +159,7 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 )
             )
         }
+
         //여기 두번쨰 컬럼에서 지정하지도 않은 padding이 양쪽 너비에 들어가서 로그인 버튼이 이상한 패딩이 적용됨
         Column(modifier = Modifier
             .fillMaxWidth(),
