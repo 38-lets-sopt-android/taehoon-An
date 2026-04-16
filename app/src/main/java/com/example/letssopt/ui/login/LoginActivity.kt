@@ -1,20 +1,22 @@
-package com.example.letssopt
+package com.example.letssopt.ui.login
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Patterns
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -22,15 +24,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,45 +40,32 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.letssopt.ui.home.MainActivity
+import com.example.letssopt.ui.signup.SignUpActivity
 import com.example.letssopt.ui.components.DefaultButton
 import com.example.letssopt.ui.components.DefaultTextField
 import com.example.letssopt.ui.theme.*
 import com.example.letssopt.ui.theme.LETSSOPTTheme
-import kotlinx.coroutines.launch
 
-class SignUpActivity : ComponentActivity() {
+class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        Log.d("LoginActivity", "onCreate: ${intent.getStringExtra("id")} and ${intent.getStringExtra("pw")}")
+        var tempId = intent.getStringExtra("id")
+        var tempPw = intent.getStringExtra("pw")
+
         setContent {
             LETSSOPTTheme {
-                val scope = rememberCoroutineScope()
-                val snackbarHostState = remember { SnackbarHostState() }
-
-                Scaffold(
-                    snackbarHost = {
-                        SnackbarHost(
-                            modifier = Modifier
-                                .navigationBarsPadding()
-                                .imePadding(),
-                            hostState = snackbarHostState
-                    ) {
-                        Snackbar(
-                            snackbarData = it,
-                            containerColor = AsSurface,
-                            contentColor = AsWhite
-                        )
-                    } },
-                    modifier = Modifier.fillMaxSize()) { innerPadding ->
-                        SignupContent(
-                            modifier = Modifier.padding(innerPadding)
-                                .consumeWindowInsets(innerPadding),
-                            onShowSnack = { message ->
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(message)
-                                }
-                            }
-                        )
+                Scaffold(modifier = Modifier
+                    .fillMaxSize()) { innerPadding ->
+                    LoginContent(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .consumeWindowInsets(innerPadding),
+                        saveId = tempId,
+                        savePw = tempPw
+                    )
                 }
             }
         }
@@ -88,18 +73,14 @@ class SignUpActivity : ComponentActivity() {
 }
 
 @Composable
-fun SignupContent(
-    modifier: Modifier = Modifier,
-    onShowSnack: (String) -> Unit
-) {
+fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?) {
     val context = LocalContext.current
-
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
+    val interactionSource = remember { MutableInteractionSource() }
 
     var textId by remember { mutableStateOf("") }
     var textPw by remember { mutableStateOf("") }
-    var textPwCheck by remember { mutableStateOf("") }
 
     //전반적인 레이아웃
     Column(modifier = modifier
@@ -112,8 +93,8 @@ fun SignupContent(
         //위쪽 컴포넌트 정렬을 위한 2차 레이아웃 wrapper
         Column(modifier = Modifier
             .fillMaxWidth()
-            .verticalScroll(scrollState)
-            .weight(1f),
+            .weight(1f)
+            .verticalScroll(scrollState),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
             ) {
@@ -122,17 +103,18 @@ fun SignupContent(
                 modifier = Modifier
                     .padding(top = 40.dp)
                     .align(Alignment.CenterHorizontally),
-                style = MaterialTheme.typography.titleLarge.copy(fontSize = 36.sp ,color = AsPrimary),
-                text = "watcha"
-            )
+                style = MaterialTheme.typography.titleLarge.copy(fontSize = 36.sp, color = AsPrimary),
+                text = "watcha",
+                color = AsPrimary
+                )
 
             Text(
                 modifier = Modifier
                     .padding(top = 20.dp),
                 style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp),
-                text = "회원가입",
+                text = "이메일로 로그인",
                 color = AsWhite
-            )
+                )
             //텍스트필드 섹션
             Text(
                 modifier = Modifier
@@ -160,10 +142,13 @@ fun SignupContent(
                     onNext = { focusManager.moveFocus(FocusDirection.Down) }
                 )
             )
-            Text(style = MaterialTheme.typography.labelSmall,
+
+            Text(
+                modifier = Modifier
+                    .padding(top = 12.dp),
+                style = MaterialTheme.typography.labelSmall,
                 text = "비밀번호",
-                color = AsSecondaryText,
-                modifier = Modifier.padding(top = 12.dp)
+                color = AsSecondaryText
             )
 
             DefaultTextField(
@@ -178,33 +163,6 @@ fun SignupContent(
                 tfVisible = false,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                )
-            )
-
-            Text(
-                modifier = Modifier
-                    .padding(top = 12.dp),
-                style = MaterialTheme.typography.labelSmall,
-                text = "비밀번호 확인",
-                color = AsSecondaryText
-            )
-
-            DefaultTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 4.dp),
-                text = textPwCheck,
-                onValueChange = { newText ->
-                    textPwCheck = newText
-                },
-                hint = "비밀번호를 다시 입력하세요",
-                tfVisible = false,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
                 ),
                 keyboardActions = KeyboardActions(
@@ -212,64 +170,79 @@ fun SignupContent(
                 )
             )
         }
-        // 이쪽 부분에선 래핑해줬던 레이아웃 제거
-        DefaultButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 10.dp, top = 20.dp),
-            "회원가입",
-            onClick = {
-                val intent = Intent(context, LoginActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                }
 
-                validateSignUp(
-                    context = context,
-                    textId = textId,
-                    textPw = textPw,
-                    textPwCheck = textPwCheck,
-                    successIntent = intent,
-                    onShowSnack = onShowSnack
+        //여기 두번쨰 컬럼에서 지정하지도 않은 padding이 양쪽 너비에 들어가서 로그인 버튼이 이상한 패딩이 적용됨
+        Column(modifier = Modifier
+            .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom
+        ) {
+
+            Text(modifier = Modifier
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                    onClick = {
+                        val intent = Intent(context, SignUpActivity::class.java)
+                        context.startActivity(intent)
+                    }
                 )
+                .padding(bottom = 10.dp, top = 10.dp),
+                style = MaterialTheme.typography.labelSmall,
+                color = AsSecondaryText,
+                text = "아직 계정이 없으신가요? 회원가입"
 
-        },
-            btEnabled = textId.isNotEmpty() &&
-                    textPw.isNotEmpty() &&
-                    textPwCheck.isNotEmpty()
-        )
+            )
+
+            DefaultButton(modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp),
+                text = "로그인",
+                onClick = {
+                    val intent2 = Intent(context, MainActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+
+                    validateLogin(
+                        context = context,
+                        saveId = saveId,
+                        savePw = savePw,
+                        textId = textId,
+                        textPw = textPw,
+                        successIntent = intent2
+                    )
+                }
+            )
+        }
     }
 }
 
-private fun validateSignUp(
-    context: android.content.Context,
+private fun validateLogin(
+    context: Context,
+    saveId: String?,
+    savePw: String?,
     textId: String,
     textPw: String,
-    textPwCheck: String,
-    successIntent: android.content.Intent,
-    onShowSnack: (String) -> Unit
+    successIntent: Intent
 ) {
-    if (android.util.Patterns.EMAIL_ADDRESS.matcher(textId).matches() &&
-        textPw.length in 8..12 && // 💡 코틀린 스타일로 더 깔끔하게 다듬었습니다.
-        textPw == textPwCheck
-    ) {
-        android.widget.Toast.makeText(context, "회원가입 성공!", android.widget.Toast.LENGTH_SHORT).show()
-
-        successIntent.putExtra("id", textId)
-        successIntent.putExtra("pw", textPw)
-
-        context.startActivity(successIntent)
+    if (saveId == null || savePw == null) {
+        Toast.makeText(context, "회원가입이 필요합니다.", Toast.LENGTH_LONG).show()
     } else {
-        onShowSnack("회원가입에 실패했습니다. 올바른 정보를 입력해주세요.")
+        if (saveId == textId && savePw != textPw) {
+            Toast.makeText(context, "비밀번호가 틀렸습니다. 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
+        } else if (saveId == textId && savePw == textPw) {
+            context.startActivity(successIntent)
+            Toast.makeText(context, "로그인 성공. 환영합니다. $textId 님.", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "로그인 실패. 다시 시도해주세요", Toast.LENGTH_SHORT).show()
+        }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
-private fun SignupContentPreview() {
+private fun LoginContentPreview() {
     LETSSOPTTheme {
-        SignupContent {
-
-        }
+        LoginContent(saveId = "id", savePw = "pw")
     }
 }

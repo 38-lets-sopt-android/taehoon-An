@@ -1,4 +1,4 @@
-package com.example.letssopt
+package com.example.letssopt.ui.home
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.decode.ImageDecoderDecoder
+import com.example.letssopt.R
 import com.example.letssopt.ui.theme.*
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
