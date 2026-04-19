@@ -8,7 +8,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -16,15 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import coil.ImageLoader
-import coil.compose.AsyncImage
-import coil.decode.ImageDecoderDecoder
-import com.example.letssopt.R
-import com.example.letssopt.ui.theme.*
+import com.example.letssopt.ui.theme.AsBg
+import com.example.letssopt.ui.theme.AsSecondaryText
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 class MainActivity : ComponentActivity() {
@@ -47,12 +41,6 @@ class MainActivity : ComponentActivity() {
 fun MainContent(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
-    val imageLoader = ImageLoader.Builder(context)
-        .components {
-            add(ImageDecoderDecoder.Factory())
-        }
-        .build()
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -62,13 +50,6 @@ fun MainContent(modifier: Modifier = Modifier) {
         Text(
             style = MaterialTheme.typography.titleLarge.copy(color = AsSecondaryText),
             text = "로그인을 축하합니다~~"
-        )
-        AsyncImage(
-            model = R.drawable.chikawa_dance,
-            contentDescription = "축하 사진",
-            imageLoader = imageLoader,
-            modifier = Modifier.height(200.dp),
-            contentScale = ContentScale.FillWidth
         )
     }
 

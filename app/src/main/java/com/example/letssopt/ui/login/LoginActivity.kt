@@ -3,11 +3,11 @@ package com.example.letssopt.ui.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,18 +41,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.letssopt.ui.home.MainActivity
-import com.example.letssopt.ui.signup.SignUpActivity
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.letssopt.ui.components.DefaultButton
 import com.example.letssopt.ui.components.DefaultTextField
-import com.example.letssopt.ui.theme.*
+import com.example.letssopt.ui.home.MainActivity
+import com.example.letssopt.ui.signup.SignUpActivity
+import com.example.letssopt.ui.theme.AsBg
+import com.example.letssopt.ui.theme.AsPrimary
+import com.example.letssopt.ui.theme.AsSecondaryText
+import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        Log.d("LoginActivity", "onCreate: ${intent.getStringExtra("id")} and ${intent.getStringExtra("pw")}")
+        //onCreate와의 생명주기를 맞추기 위해 여기서 객체 생성 후 전달
+        val viewModel by viewModels<LoginViewModel>()
         var tempId = intent.getStringExtra("id")
         var tempPw = intent.getStringExtra("pw")
 
@@ -63,6 +69,7 @@ class LoginActivity : ComponentActivity() {
                         modifier = Modifier
                             .padding(innerPadding)
                             .consumeWindowInsets(innerPadding),
+                        viewModel = viewModel,
                         saveId = tempId,
                         savePw = tempPw
                     )
@@ -73,21 +80,26 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?) {
+fun LoginContent(
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel,
+    saveId: String?,
+    savePw: String?
+) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
     val interactionSource = remember { MutableInteractionSource() }
-
-    var textId by remember { mutableStateOf("") }
-    var textPw by remember { mutableStateOf("") }
+    //value로 직접 접근해주면 값을 못읽기에 collectAsStateWithLifecycle()을 통해 추적 가능한 관찰 객체를 만들어줌
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     //전반적인 레이아웃
-    Column(modifier = modifier
-        .fillMaxSize()
-        .background(color = AsBg)
-        .padding(20.dp)
-        .imePadding(),
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = AsBg)
+            .padding(20.dp)
+            .imePadding(),
         horizontalAlignment = Alignment.CenterHorizontally
         ) {
         //위쪽 컴포넌트 정렬을 위한 2차 레이아웃 wrapper
@@ -128,10 +140,8 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
-                text = textId,
-                onValueChange = { newText ->
-                    textId = newText
-                },
+                text = uiState.textId,
+                onValueChange = { viewModel.onChangedId(it) },
                 hint = "이메일 주소를 입력하세요",
                 tfVisible = true,
                 keyboardOptions = KeyboardOptions(
@@ -155,10 +165,8 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
-                text = textPw,
-                onValueChange = { newText ->
-                    textPw = newText
-                },
+                text = uiState.textPw,
+                onValueChange = { viewModel.onChangedPw(it) },
                 hint = "비밀번호를 입력하세요",
                 tfVisible = false,
                 keyboardOptions = KeyboardOptions(
@@ -207,8 +215,8 @@ fun LoginContent(modifier: Modifier = Modifier, saveId: String?, savePw: String?
                         context = context,
                         saveId = saveId,
                         savePw = savePw,
-                        textId = textId,
-                        textPw = textPw,
+                        textId = uiState.textId,
+                        textPw = uiState.textPw,
                         successIntent = intent2
                     )
                 }
@@ -243,6 +251,6 @@ private fun validateLogin(
 @Composable
 private fun LoginContentPreview() {
     LETSSOPTTheme {
-        LoginContent(saveId = "id", savePw = "pw")
+        LoginContent(saveId = "id", savePw = "pw", viewModel = LoginViewModel())
     }
 }
