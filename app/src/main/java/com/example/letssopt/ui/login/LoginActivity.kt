@@ -1,8 +1,10 @@
 package com.example.letssopt.ui.login
 
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,11 +28,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -42,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.letssopt.data.local.model.AccountDTO
 import com.example.letssopt.ui.components.DefaultButton
 import com.example.letssopt.ui.components.DefaultTextField
 import com.example.letssopt.ui.home.MainActivity
@@ -58,9 +58,17 @@ class LoginActivity : ComponentActivity() {
         enableEdgeToEdge()
         //onCreate와의 생명주기를 맞추기 위해 여기서 객체 생성 후 전달
         val viewModel by viewModels<LoginViewModel>()
-        var tempId = intent.getStringExtra("id")
-        var tempPw = intent.getStringExtra("pw")
 
+        Log.d("AccountCheck", "AccountId: ${viewModel.onGetAccount().accountId} / AccountPw : ${viewModel.onGetAccount().accountPw}")
+        if(viewModel.onGetAccount().accountId != "" && viewModel.onGetAccount().accountPw != "") {
+            val intent = Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            Toast.makeText(this, "로그인 성공. 환영합니다. ${viewModel.onGetAccount().accountId} 님.", Toast.LENGTH_SHORT).show()
+            startActivity(intent)
+            finish()
+            return
+        }
         setContent {
             LETSSOPTTheme {
                 Scaffold(modifier = Modifier
@@ -70,8 +78,7 @@ class LoginActivity : ComponentActivity() {
                             .padding(innerPadding)
                             .consumeWindowInsets(innerPadding),
                         viewModel = viewModel,
-                        saveId = tempId,
-                        savePw = tempPw
+                        account = viewModel.onGetAccount()
                     )
                 }
             }
@@ -83,8 +90,7 @@ class LoginActivity : ComponentActivity() {
 fun LoginContent(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel,
-    saveId: String?,
-    savePw: String?
+    account: AccountDTO
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -213,8 +219,8 @@ fun LoginContent(
 
                     validateLogin(
                         context = context,
-                        saveId = saveId,
-                        savePw = savePw,
+                        saveId = account.accountId,
+                        savePw = account.accountPw,
                         textId = uiState.textId,
                         textPw = uiState.textPw,
                         successIntent = intent2
@@ -251,6 +257,6 @@ private fun validateLogin(
 @Composable
 private fun LoginContentPreview() {
     LETSSOPTTheme {
-        LoginContent(saveId = "id", savePw = "pw", viewModel = LoginViewModel())
+        LoginContent(account = AccountDTO(), viewModel = LoginViewModel(Application()))
     }
 }

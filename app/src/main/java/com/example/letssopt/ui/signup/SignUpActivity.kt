@@ -1,5 +1,6 @@
 package com.example.letssopt.ui.signup
 
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -250,9 +251,7 @@ private fun validateSignUp(
     ) {
         Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
 
-        successIntent.putExtra("id", textId)
-        successIntent.putExtra("pw", textPw)
-
+        viewModel.onSaveAccount(textId, textPw)
         context.startActivity(successIntent)
     } else {
         onShowSnack("회원가입에 실패했습니다. 올바른 정보를 입력해주세요.")
@@ -266,6 +265,6 @@ private fun SignupContentPreview() {
     LETSSOPTTheme {
         SignupContent(onShowSnack = {
 
-        }, viewModel = SignUpViewModel())
+        }, viewModel = SignUpViewModel(application = Application()))
     }
 }
