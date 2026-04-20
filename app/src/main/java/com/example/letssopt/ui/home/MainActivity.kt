@@ -1,10 +1,15 @@
 package com.example.letssopt.ui.home
 
+import android.R.color.transparent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +21,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,13 +29,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.letssopt.R
+import com.example.letssopt.ui.home.MainViewModel.SelectBottomItems
 import com.example.letssopt.ui.theme.AsBg
+import com.example.letssopt.ui.theme.AsDisable
+import com.example.letssopt.ui.theme.AsPrimary
 import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
@@ -37,9 +50,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val viewModel by viewModels<MainViewModel>()
         setContent {
             LETSSOPTTheme {
-                MainScreen()
+                MainScreen(viewModel)
             }
         }
     }
@@ -47,19 +61,41 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(viewModel: MainViewModel) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             MainTopBar()
         },
         bottomBar = {
-            MainBottomBar()
+            MainBottomBar(
+                uiState.selectBottomItem,
+                onItemSelected = { newItem ->
+                    viewModel.onSelectBottomItem(newItem) }
+            )
         }
     ) { innerPadding ->
-        MainContent(
-            modifier = Modifier.padding(innerPadding)
-        )
+        when(uiState.selectBottomItem) {
+            SelectBottomItems.MAIN -> MainContent(
+                modifier = Modifier.padding(innerPadding)
+            )
+            SelectBottomItems.CATEGORY -> EmptyContent(
+                modifier = Modifier.padding(innerPadding)
+            )
+            SelectBottomItems.WALLET -> EmptyContent(
+                modifier = Modifier.padding(innerPadding)
+            )
+            SelectBottomItems.SEARCH -> EmptyContent(
+                modifier = Modifier.padding(innerPadding)
+            )
+            SelectBottomItems.FOLDER -> EmptyContent(
+                modifier = Modifier.padding(innerPadding)
+            )
+            null -> EmptyContent(
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
     }
 }
 
@@ -100,122 +136,89 @@ fun MainTopBar() {
 }
 
 @Composable
-fun MainBottomBar() {
+fun MainBottomBar(
+    selectBottomItem: SelectBottomItems?,
+    onItemSelected: (SelectBottomItems) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .navigationBarsPadding()
             .height(72.dp)
             .background(AsBg)
-            .navigationBarsPadding()
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(
-            onClick = {},
-            modifier = Modifier.size(width = 48.dp, height = 50.dp)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.btmbar_main),
-                    contentDescription = "mainButton",
-                    tint = AsWhite
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "메인",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = AsWhite
-                )
-            }
-        }
-        IconButton(
-            onClick = {},
-            modifier = Modifier.size(width = 48.dp, height = 50.dp)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.btmbar_category),
-                    contentDescription = "categoryButton",
-                    tint = AsWhite
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "개별 구매",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = AsWhite
-                )
-            }
-        }
-        IconButton(
-            onClick = {},
-            modifier = Modifier.size(width = 48.dp, height = 50.dp)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.btmbar_wallet),
-                    contentDescription = "walletButton",
-                    tint = AsWhite
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "웹툰",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = AsWhite
-                )
-            }
-        }
-        IconButton(
-            onClick = {},
-            modifier = Modifier.size(width = 48.dp, height = 50.dp)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.btmbar_search),
-                    contentDescription = "searchButton",
-                    tint = AsWhite
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "찾기",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = AsWhite
-                )
-            }
-        }
-        IconButton(
-            onClick = {},
-            modifier = Modifier.size(width = 48.dp, height = 50.dp)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.btmbar_folder),
-                    contentDescription = "folderButton",
-                    tint = AsWhite
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "보관함",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = AsWhite
-                )
-            }
-        }
+        BottomTabItem(
+            item = SelectBottomItems.MAIN,
+            label = "메인",
+            iconRes = R.drawable.btmbar_main,
+            isSelected = selectBottomItem == SelectBottomItems.MAIN,
+            onItemSelected = onItemSelected
+        )
+        BottomTabItem(
+            item = SelectBottomItems.CATEGORY,
+            label = "개별 구매",
+            iconRes = R.drawable.btmbar_category,
+            isSelected = selectBottomItem == SelectBottomItems.CATEGORY,
+            onItemSelected = onItemSelected
+        )
+        BottomTabItem(
+            item = SelectBottomItems.WALLET,
+            label = "웹툰",
+            iconRes = R.drawable.btmbar_wallet,
+            isSelected = selectBottomItem == SelectBottomItems.WALLET,
+            onItemSelected = onItemSelected
+        )
+        BottomTabItem(
+            item = SelectBottomItems.SEARCH,
+            label = "찾기",
+            iconRes = R.drawable.btmbar_search,
+            isSelected = selectBottomItem == SelectBottomItems.SEARCH,
+            onItemSelected = onItemSelected
+        )
+        BottomTabItem(
+            item = SelectBottomItems.FOLDER,
+            label = "보관함",
+            iconRes = R.drawable.btmbar_folder,
+            isSelected = selectBottomItem == SelectBottomItems.FOLDER,
+            onItemSelected = onItemSelected
+        )
+    }
+}
+
+@Composable
+fun BottomTabItem(
+    item: SelectBottomItems,
+    label: String,
+    iconRes: Int,
+    isSelected: Boolean,
+    onItemSelected: (SelectBottomItems) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .width(56.dp)
+            .height(60.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = { onItemSelected(item) }
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            painter = painterResource(id = iconRes),
+            contentDescription = label,
+            tint = if (isSelected) AsWhite else AsDisable
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = if (isSelected) AsWhite else AsDisable
+        )
     }
 }
 
@@ -223,6 +226,6 @@ fun MainBottomBar() {
 @Composable
 private fun MainScreenPreview() {
     LETSSOPTTheme {
-        MainScreen()
+        MainScreen(MainViewModel())
     }
 }
