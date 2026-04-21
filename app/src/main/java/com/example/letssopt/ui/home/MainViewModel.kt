@@ -1,6 +1,7 @@
 package com.example.letssopt.ui.home
 
 import androidx.lifecycle.ViewModel
+import com.example.letssopt.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -14,7 +15,18 @@ class MainViewModel : ViewModel() {
     }
 
     data class MainUiState(
-        val selectBottomItem: SelectBottomItems?
+        val selectBottomItem: SelectBottomItems?,
+        val rowItemList: List<Int> = listOf(
+            R.drawable.rowmjg1,
+            R.drawable.rowmjg2,
+            R.drawable.rowmjg3
+        ),
+        val colItemList: List<Int> = listOf(
+            R.drawable.colmjg1,
+            R.drawable.colmjg2,
+            R.drawable.colmjg3,
+            R.drawable.colmjg4
+        )
     )
 
     private val _uiState = MutableStateFlow(MainUiState(SelectBottomItems.MAIN))
