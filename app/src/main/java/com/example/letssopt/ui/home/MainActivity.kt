@@ -4,80 +4,224 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
-import coil.compose.AsyncImage
-import coil.decode.ImageDecoderDecoder
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.letssopt.R
-import com.example.letssopt.ui.theme.*
+import com.example.letssopt.ui.home.MainViewModel.SelectBottomItems
+import com.example.letssopt.ui.theme.AsBg
+import com.example.letssopt.ui.theme.AsDisable
+import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val viewModel by viewModels<MainViewModel>()
         setContent {
             LETSSOPTTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainContent(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                MainScreen(viewModel)
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainContent(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-
-    val imageLoader = ImageLoader.Builder(context)
-        .components {
-            add(ImageDecoderDecoder.Factory())
+fun MainScreen(viewModel: MainViewModel) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            MainTopBar()
+        },
+        bottomBar = {
+            MainBottomBar(
+                uiState.selectBottomItem,
+                onItemSelected = { newItem ->
+                    viewModel.onSelectBottomItem(newItem) }
+            )
         }
-        .build()
+    ) { innerPadding ->
+        when(uiState.selectBottomItem) {
+            SelectBottomItems.MAIN -> MainContent(
+                modifier = Modifier.padding(innerPadding),
+                uiState = uiState
+            )
+            SelectBottomItems.CATEGORY -> EmptyContent(
+                modifier = Modifier.padding(innerPadding)
+            )
+            SelectBottomItems.WALLET -> EmptyContent(
+                modifier = Modifier.padding(innerPadding)
+            )
+            SelectBottomItems.SEARCH -> EmptyContent(
+                modifier = Modifier.padding(innerPadding)
+            )
+            SelectBottomItems.FOLDER -> EmptyContent(
+                modifier = Modifier.padding(innerPadding)
+            )
+            null -> EmptyContent(
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
+    }
+}
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = AsBg),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center) {
-        Text(
-            style = MaterialTheme.typography.titleLarge.copy(color = AsSecondaryText),
-            text = "로그인을 축하합니다~~"
+@Composable
+fun MainTopBar() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(70.dp)
+            .background(AsBg)
+            .statusBarsPadding()
+            .padding(horizontal = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End
+    ) {
+        IconButton(onClick = {}) {
+            Icon(
+                painter = painterResource(id = R.drawable.btn_camera),
+                contentDescription = "camera",
+                tint = AsWhite
+            )
+        }
+        IconButton(onClick = {}) {
+            Icon(
+                painter = painterResource(id = R.drawable.btn_ring),
+                contentDescription = "ring",
+                tint = AsWhite
+            )
+        }
+        IconButton(onClick = {}) {
+            Icon(
+                painter = painterResource(id = R.drawable.btn_profile),
+                contentDescription = "profile",
+                tint = AsWhite
+            )
+        }
+    }
+}
+
+@Composable
+fun MainBottomBar(
+    selectBottomItem: SelectBottomItems?,
+    onItemSelected: (SelectBottomItems) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding() // NavigationBarsPadding 메서드 순서 중요(height이후에 지정해주면 제대로 먹지 않음)
+            .height(72.dp)
+            .background(AsBg)
+            .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        BottomTabItem(
+            item = SelectBottomItems.MAIN,
+            label = "메인",
+            iconRes = R.drawable.btmbar_main,
+            isSelected = selectBottomItem == SelectBottomItems.MAIN,
+            onItemSelected = onItemSelected
         )
-        AsyncImage(
-            model = R.drawable.chikawa_dance,
-            contentDescription = "축하 사진",
-            imageLoader = imageLoader,
-            modifier = Modifier.height(200.dp),
-            contentScale = ContentScale.FillWidth
+        BottomTabItem(
+            item = SelectBottomItems.CATEGORY,
+            label = "개별구매",
+            iconRes = R.drawable.btmbar_category,
+            isSelected = selectBottomItem == SelectBottomItems.CATEGORY,
+            onItemSelected = onItemSelected
+        )
+        BottomTabItem(
+            item = SelectBottomItems.WALLET,
+            label = "웹툰",
+            iconRes = R.drawable.btmbar_wallet,
+            isSelected = selectBottomItem == SelectBottomItems.WALLET,
+            onItemSelected = onItemSelected
+        )
+        BottomTabItem(
+            item = SelectBottomItems.SEARCH,
+            label = "찾기",
+            iconRes = R.drawable.btmbar_search,
+            isSelected = selectBottomItem == SelectBottomItems.SEARCH,
+            onItemSelected = onItemSelected
+        )
+        BottomTabItem(
+            item = SelectBottomItems.FOLDER,
+            label = "보관함",
+            iconRes = R.drawable.btmbar_folder,
+            isSelected = selectBottomItem == SelectBottomItems.FOLDER,
+            onItemSelected = onItemSelected
         )
     }
+}
 
+@Composable
+fun BottomTabItem(
+    item: SelectBottomItems,
+    label: String,
+    iconRes: Int,
+    isSelected: Boolean,
+    onItemSelected: (SelectBottomItems) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .width(56.dp)
+            .height(60.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = { onItemSelected(item) }
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            painter = painterResource(id = iconRes),
+            contentDescription = label,
+            tint = if (isSelected) AsWhite else AsDisable
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = if (isSelected) AsWhite else AsDisable
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun MainContentPreview() {
+private fun MainScreenPreview() {
     LETSSOPTTheme {
-        MainContent()
+        MainScreen(MainViewModel())
     }
 }

@@ -1,13 +1,14 @@
 package com.example.letssopt.ui.signup
 
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,10 +30,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -43,6 +42,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.letssopt.ui.components.DefaultButton
 import com.example.letssopt.ui.components.DefaultTextField
 import com.example.letssopt.ui.login.LoginActivity
@@ -54,6 +54,7 @@ class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val viewModel by viewModels<SignUpViewModel>()
         setContent {
             LETSSOPTTheme {
                 val scope = rememberCoroutineScope()
@@ -81,7 +82,8 @@ class SignUpActivity : ComponentActivity() {
                                 scope.launch {
                                     snackbarHostState.showSnackbar(message)
                                 }
-                            }
+                            },
+                            viewModel = viewModel
                         )
                 }
             }
@@ -92,16 +94,15 @@ class SignUpActivity : ComponentActivity() {
 @Composable
 fun SignupContent(
     modifier: Modifier = Modifier,
-    onShowSnack: (String) -> Unit
+    onShowSnack: (String) -> Unit,
+    viewModel: SignUpViewModel
 ) {
     val context = LocalContext.current
 
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
 
-    var textId by remember { mutableStateOf("") }
-    var textPw by remember { mutableStateOf("") }
-    var textPwCheck by remember { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     //전반적인 레이아웃
     Column(modifier = modifier
@@ -148,10 +149,8 @@ fun SignupContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
-                text = textId,
-                onValueChange = { newText ->
-                    textId = newText
-                },
+                text = uiState.textId,
+                onValueChange = { viewModel.onChangedId(it) },
                 hint = "이메일 주소를 입력하세요",
                 tfVisible = true,
                 keyboardOptions = KeyboardOptions(
@@ -172,10 +171,8 @@ fun SignupContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
-                text = textPw,
-                onValueChange = { newText ->
-                    textPw = newText
-                },
+                text = uiState.textPw,
+                onValueChange = { viewModel.onChangedPw(it) },
                 hint = "비밀번호를 입력하세요",
                 tfVisible = false,
                 keyboardOptions = KeyboardOptions(
@@ -199,10 +196,8 @@ fun SignupContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
-                text = textPwCheck,
-                onValueChange = { newText ->
-                    textPwCheck = newText
-                },
+                text = uiState.textCkPw,
+                onValueChange = { viewModel.onChangedCkPw(it) },
                 hint = "비밀번호를 다시 입력하세요",
                 tfVisible = false,
                 keyboardOptions = KeyboardOptions(
@@ -227,17 +222,18 @@ fun SignupContent(
 
                 validateSignUp(
                     context = context,
-                    textId = textId,
-                    textPw = textPw,
-                    textPwCheck = textPwCheck,
+                    textId = uiState.textId,
+                    textPw = uiState.textPw,
+                    textPwCheck = uiState.textCkPw,
+                    viewModel = viewModel,
                     successIntent = intent,
                     onShowSnack = onShowSnack
                 )
 
         },
-            btEnabled = textId.isNotEmpty() &&
-                    textPw.isNotEmpty() &&
-                    textPwCheck.isNotEmpty()
+            btEnabled = uiState.textId.isNotEmpty() &&
+                    uiState.textPw.isNotEmpty() &&
+                    uiState.textCkPw.isNotEmpty()
         )
     }
 }
@@ -248,17 +244,14 @@ private fun validateSignUp(
     textPw: String,
     textPwCheck: String,
     successIntent: Intent,
-    onShowSnack: (String) -> Unit
+    onShowSnack: (String) -> Unit,
+    viewModel: SignUpViewModel
 ) {
-    if (Patterns.EMAIL_ADDRESS.matcher(textId).matches() &&
-        textPw.length in 8..12 && // 💡 코틀린 스타일로 더 깔끔하게 다듬었습니다.
-        textPw == textPwCheck
+    if (viewModel.validationCheck(textId, textPw, textPwCheck)
     ) {
         Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
 
-        successIntent.putExtra("id", textId)
-        successIntent.putExtra("pw", textPw)
-
+        viewModel.onSaveAccount(textId, textPw)
         context.startActivity(successIntent)
     } else {
         onShowSnack("회원가입에 실패했습니다. 올바른 정보를 입력해주세요.")
@@ -270,8 +263,8 @@ private fun validateSignUp(
 @Composable
 private fun SignupContentPreview() {
     LETSSOPTTheme {
-        SignupContent {
+        SignupContent(onShowSnack = {
 
-        }
+        }, viewModel = SignUpViewModel(application = Application()))
     }
 }
