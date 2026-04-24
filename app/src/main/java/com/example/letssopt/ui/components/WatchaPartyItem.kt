@@ -50,12 +50,12 @@ fun WatchaPartyItem(
     ) {
         Box(
             modifier = Modifier
+                .padding(top = 4.dp, end = 4.dp)
                 .size(35.dp)
                 .align(Alignment.TopEnd)
                 .clip(CircleShape)
                 .background(AsWhite)
-                .padding(top = 7.dp, end = 5.dp)
-                .clickable {  },
+                .clickable { onClick },
             contentAlignment = Alignment.Center
         ) {
             Icon(
