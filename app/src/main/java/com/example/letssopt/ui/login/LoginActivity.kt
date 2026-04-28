@@ -41,7 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.letssopt.data.local.model.AccountDTO
+import com.example.letssopt.data.local.model.AccountItem
 import com.example.letssopt.ui.components.DefaultButton
 import com.example.letssopt.ui.components.DefaultTextField
 import com.example.letssopt.ui.home.MainActivity
@@ -90,7 +90,7 @@ class LoginActivity : ComponentActivity() {
 fun LoginContent(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel,
-    account: AccountDTO
+    account: AccountItem
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -257,6 +257,6 @@ private fun validateLogin(
 @Composable
 private fun LoginContentPreview() {
     LETSSOPTTheme {
-        LoginContent(account = AccountDTO(), viewModel = LoginViewModel(Application()))
+        LoginContent(account = AccountItem(), viewModel = LoginViewModel(Application()))
     }
 }

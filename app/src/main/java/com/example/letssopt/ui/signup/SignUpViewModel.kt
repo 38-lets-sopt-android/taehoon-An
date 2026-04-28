@@ -4,7 +4,7 @@ import android.app.Application
 import android.util.Patterns
 import androidx.lifecycle.AndroidViewModel
 import com.example.letssopt.data.local.PreferenceManager
-import com.example.letssopt.data.local.model.AccountDTO
+import com.example.letssopt.data.local.model.AccountItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -40,7 +40,7 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
             textPw == textPwCheck
     }
 
-    fun onSaveAccount(saveId : String, savePw : String) = prefManager.setAccount(AccountDTO(saveId, savePw))
+    fun onSaveAccount(saveId : String, savePw : String) = prefManager.setAccount(AccountItem(saveId, savePw))
 
 
 }

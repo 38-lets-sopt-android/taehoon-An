@@ -29,8 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.letssopt.R
-import com.example.letssopt.data.local.model.WatchPartyItemDTO
-import com.example.letssopt.ui.components.WatchaPartyItem
+import com.example.letssopt.data.local.model.WatchPartyItem
+import com.example.letssopt.ui.components.WatchaPartyComponent
 import com.example.letssopt.ui.theme.AsBg
 import com.example.letssopt.ui.theme.AsDisable
 import com.example.letssopt.ui.theme.AsSecondaryText
@@ -225,7 +225,7 @@ fun MainContent(modifier: Modifier = Modifier, uiState: MainViewModel.MainUiStat
             contentPadding = PaddingValues(horizontal = 8.dp)
         ) {
             items(uiState.lastItemList) { item ->
-                WatchaPartyItem(item = item, onClick = {})
+                WatchaPartyComponent(item = item, onClick = {})
             }
         }
     }
@@ -250,17 +250,17 @@ private fun MainContentPreview() {
                     R.drawable.colmjg4
                 ),
                 lastItemList = listOf(
-                    WatchPartyItemDTO(
+                    WatchPartyItem(
                         R.drawable.lastimg1,
                         "오늘 22:15분에 시작",
                         listOf("먼작귀", "치이카와", "울보")
                     ),
-                    WatchPartyItemDTO(
+                    WatchPartyItem(
                         R.drawable.lastimg2,
                         "내일 07:45분에 시작",
                         listOf("이것도", "먼작귀", "치이카와")
                     ),
-                    WatchPartyItemDTO(
+                    WatchPartyItem(
                         R.drawable.lastimg3,
                         "내일 13:30분에 시작",
                         listOf("먼작귀", "치이카와", "울보")

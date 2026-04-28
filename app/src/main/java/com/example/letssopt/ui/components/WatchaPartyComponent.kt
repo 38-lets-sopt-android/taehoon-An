@@ -26,23 +26,22 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.letssopt.R
-import com.example.letssopt.data.local.model.WatchPartyItemDTO
+import com.example.letssopt.data.local.model.WatchPartyItem
 import com.example.letssopt.ui.theme.AsPrimary
 import com.example.letssopt.ui.theme.AsSurface
 import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 @Composable
-fun WatchaPartyItem(
+fun WatchaPartyComponent(
     modifier: Modifier = Modifier,
-    item: WatchPartyItemDTO,
+    item: WatchPartyItem,
     onClick: () -> Unit,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clickable(onClick = onClick)
             .size(196.dp, 185.dp)
-            .fillMaxSize()
             .paint(
                 painterResource(id = item.image),
                 contentScale = ContentScale.FillBounds
@@ -60,7 +59,7 @@ fun WatchaPartyItem(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_fillring),
-                contentDescription = "ring button",
+                contentDescription = null,
             )
         }
 
@@ -102,8 +101,8 @@ fun WatchaPartyItem(
 @Composable
 private fun WatchaPartyItemPreview() {
     LETSSOPTTheme {
-        WatchaPartyItem(
-            item = WatchPartyItemDTO(
+        WatchaPartyComponent(
+            item = WatchPartyItem(
                 image = R.drawable.lastimg1,
                 startLabel = "오늘 22:15분에 시작",
                 hashTag = listOf("치이카와", "먼작귀")

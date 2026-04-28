@@ -1,19 +1,28 @@
 package com.example.letssopt.data.local
 
 import android.content.Context
-import com.example.letssopt.data.local.model.AccountDTO
+import com.example.letssopt.data.local.model.AccountItem
 
 class PreferenceManager(context : Context) {
-    private val sharedPreference = context.getSharedPreferences("user_data", Context.MODE_PRIVATE)
+    private val sharedPreference = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
-    fun setAccount(account : AccountDTO) {
+    fun setAccount(account: AccountItem) {
         sharedPreference.edit()
-            .putString("id", account.accountId)
-            .putString("pw", account.accountPw)
+            .putString(KEY_ID, account.accountId)
+            .putString(KEY_PW, account.accountPw)
             .apply()
     }
 
-    fun getAccount() : AccountDTO {
-        return AccountDTO(sharedPreference.getString("id", ""), sharedPreference.getString("pw", ""))
+    fun getAccount() : AccountItem {
+        return AccountItem(
+            accountId = sharedPreference.getString(KEY_ID, "") ?: "",
+            accountPw = sharedPreference.getString(KEY_PW, "") ?: ""
+        )
+    }
+
+    companion object {
+        private const val PREF_NAME = "user_data"
+        private const val KEY_ID = "id"
+        private const val KEY_PW = "pw"
     }
 }

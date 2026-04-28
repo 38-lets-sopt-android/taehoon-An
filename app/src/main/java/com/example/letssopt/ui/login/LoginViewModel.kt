@@ -1,11 +1,9 @@
 package com.example.letssopt.ui.login
 
 import android.app.Application
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import com.example.letssopt.data.local.PreferenceManager
-import com.example.letssopt.data.local.model.AccountDTO
+import com.example.letssopt.data.local.model.AccountItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -30,7 +28,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.update { it.copy(textPw = newPw) }
     }
 
-    fun onGetAccount() : AccountDTO {
+    fun onGetAccount() : AccountItem {
         return prefManager.getAccount()
     }
 
