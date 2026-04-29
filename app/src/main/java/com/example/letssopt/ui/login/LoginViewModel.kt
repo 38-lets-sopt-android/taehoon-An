@@ -32,6 +32,15 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         return prefManager.getAccount()
     }
 
+    fun setIsLoggedIn(login : Boolean) = prefManager.setIsLoggedIn(login)
+
+
+    fun getIsLoggedIn() : Boolean {
+        return prefManager.getIsLoggedIn()
+    }
+
+
+
 
 }
 

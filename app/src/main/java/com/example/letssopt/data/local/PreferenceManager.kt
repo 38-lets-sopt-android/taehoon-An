@@ -20,9 +20,20 @@ class PreferenceManager(context : Context) {
         )
     }
 
+    fun setIsLoggedIn(login : Boolean) {
+        sharedPreference.edit()
+            .putBoolean(KEY_IS_LOGGED_IN, login)
+            .apply()
+    }
+
+    fun getIsLoggedIn() : Boolean {
+        return sharedPreference.getBoolean(KEY_IS_LOGGED_IN, false) ?: false
+    }
+
     companion object {
         private const val PREF_NAME = "user_data"
         private const val KEY_ID = "id"
         private const val KEY_PW = "pw"
+        private const val KEY_IS_LOGGED_IN = "is_logged_in"
     }
 }

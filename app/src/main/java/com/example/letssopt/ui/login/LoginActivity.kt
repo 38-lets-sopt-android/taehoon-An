@@ -59,8 +59,7 @@ class LoginActivity : ComponentActivity() {
         //onCreate와의 생명주기를 맞추기 위해 여기서 객체 생성 후 전달
         val viewModel by viewModels<LoginViewModel>()
 
-        Log.d("AccountCheck", "AccountId: ${viewModel.onGetAccount().accountId} / AccountPw : ${viewModel.onGetAccount().accountPw}")
-        if(viewModel.onGetAccount().accountId != "" && viewModel.onGetAccount().accountPw != "") {
+        if(viewModel.getIsLoggedIn()) {
             val intent = Intent(this, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             }
@@ -223,7 +222,8 @@ fun LoginContent(
                         savePw = account.accountPw,
                         textId = uiState.textId,
                         textPw = uiState.textPw,
-                        successIntent = intent2
+                        successIntent = intent2,
+                        viewModel
                     )
                 }
             )
@@ -237,7 +237,8 @@ private fun validateLogin(
     savePw: String?,
     textId: String,
     textPw: String,
-    successIntent: Intent
+    successIntent: Intent,
+    viewModel: LoginViewModel
 ) {
     if (saveId == null || savePw == null) {
         Toast.makeText(context, "회원가입이 필요합니다.", Toast.LENGTH_LONG).show()
@@ -245,6 +246,7 @@ private fun validateLogin(
         if (saveId == textId && savePw != textPw) {
             Toast.makeText(context, "비밀번호가 틀렸습니다. 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
         } else if (saveId == textId && savePw == textPw) {
+            viewModel.setIsLoggedIn(true)
             context.startActivity(successIntent)
             Toast.makeText(context, "로그인 성공. 환영합니다. $textId 님.", Toast.LENGTH_SHORT).show()
         } else {
