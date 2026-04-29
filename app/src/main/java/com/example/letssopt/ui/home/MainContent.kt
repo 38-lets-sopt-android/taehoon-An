@@ -11,11 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,193 +38,197 @@ import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 @Composable
 fun MainContent(modifier: Modifier = Modifier, uiState: MainViewModel.MainUiState) {
-    val scrollState = rememberScrollState()
-    Column(
+    LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(color = AsBg)
-            .verticalScroll(state = scrollState),
+            .background(color = AsBg),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Text(
-            modifier = Modifier
-                .padding(top = 24.dp, start = 19.dp)
-                .align(Alignment.Start),
-            style = MaterialTheme.typography.titleMedium.copy(color = AsWhite, fontWeight = Bold),
-            text = "방금 막 도착한 신상 컨텐츠"
-        )
+        item {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    modifier = Modifier
+                        .padding(top = 24.dp, start = 19.dp),
+                    style = MaterialTheme.typography.titleMedium.copy(color = AsWhite, fontWeight = Bold),
+                    text = "방금 막 도착한 신상 컨텐츠"
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 19.dp),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = AsSecondaryText,
+                        fontSize = 18.sp,
+                        fontWeight = Bold
+                    ),
+                    text = "예능부터 드라마까지!"
+                )
+            }
+        }
 
-        Text(
-            modifier = Modifier
-                .padding(start = 19.dp)
-                .align(Alignment.Start),
-            style = MaterialTheme.typography.bodyMedium.copy(
-                color = AsSecondaryText,
-                fontSize = 18.sp,
-                fontWeight = Bold
-            ),
-            text = "예능부터 드라마까지!"
-        )
+        item {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 24.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp)
+            ) {
+                items(uiState.rowItemList) { item ->
+                    Image(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(16.dp))
+                            .size(280.dp, 160.dp)
+                            .background(AsDisable),
+                        painter = painterResource(id = item),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null
+                    )
+                }
+            }
+        }
 
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp),
-            horizontalArrangement = Arrangement.spacedBy(20.dp),
-            contentPadding = PaddingValues(horizontal = 8.dp)
-        ) {
-            items(uiState.rowItemList) { item ->
+        item {
+            Column(modifier = Modifier.fillMaxWidth()) {
                 Image(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .size(280.dp, 160.dp)
-                        .fillMaxSize()
-                        .background(AsDisable),
-                    painter = painterResource(id = item),
-                    contentScale = ContentScale.Crop,
+                        .padding(top = 26.dp, start = 16.dp),
+                    painter = painterResource(id = R.drawable.ic_watgorithm),
                     contentDescription = null
                 )
             }
         }
 
-        Image(
-            modifier = Modifier
-                .padding(top = 26.dp, start = 16.dp)
-                .align(Alignment.Start),
-            painter = painterResource(id = R.drawable.ic_watgorithm),
-            contentDescription = null
-        )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp, horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Text(
-                text = "예능부터 드라마까지!",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = AsSecondaryText,
-                    fontSize = 18.sp,
-                    fontWeight = Bold
-                )
-            )
-
-            Text(
+        item {
+            Row(
                 modifier = Modifier
-                    .clickable() { },
-                text = "더보기",
-                style = MaterialTheme.typography.labelSmall.copy(
-                    color = AsSecondaryText,
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp, horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Text(
+                    text = "예능부터 드라마까지!",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = AsSecondaryText,
+                        fontSize = 18.sp,
+                        fontWeight = Bold
+                    )
                 )
-            )
-        }
 
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 6.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(horizontal = 8.dp)
-        ) {
-            items(uiState.colItemList) { item ->
-                Image(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
-                        .size(100.dp, 150.dp)
-                        .fillMaxSize()
-                        .background(AsDisable),
-                    painter = painterResource(id = item),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null
+                Text(
+                    modifier = Modifier.clickable { },
+                    text = "더보기",
+                    style = MaterialTheme.typography.labelSmall.copy(color = AsSecondaryText)
                 )
             }
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 26.dp, bottom = 4.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Text(
-                text = "공개 예정 컨텐츠",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = AsWhite,
-                    fontSize = 18.sp,
-                    fontWeight = Bold
-                )
-            )
-
-            Text(
+        item {
+            LazyRow(
                 modifier = Modifier
-                    .clickable() { },
-                text = "더보기",
-                style = MaterialTheme.typography.labelSmall.copy(
-                    color = AsSecondaryText,
-                )
-            )
+                    .fillMaxWidth()
+                    .padding(top = 6.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp)
+            ) {
+                items(uiState.colItemList) { item ->
+                    Image(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .size(100.dp, 150.dp)
+                            .background(AsDisable),
+                        painter = painterResource(id = item),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null
+                    )
+                }
+            }
         }
 
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 6.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(horizontal = 8.dp)
-        ) {
-            items(uiState.colItemList) { item ->
-                Image(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
-                        .size(100.dp, 150.dp)
-                        .fillMaxSize()
-                        .background(AsDisable),
-                    painter = painterResource(id = item),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 26.dp, bottom = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Text(
+                    text = "공개 예정 컨텐츠",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = AsWhite,
+                        fontSize = 18.sp,
+                        fontWeight = Bold
+                    )
+                )
+
+                Text(
+                    modifier = Modifier.clickable { },
+                    text = "더보기",
+                    style = MaterialTheme.typography.labelSmall.copy(color = AsSecondaryText)
                 )
             }
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 26.dp, bottom = 4.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Text(
-                text = "왓챠 파티",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = AsWhite,
-                    fontSize = 18.sp,
-                    fontWeight = Bold
-                )
-            )
-
-            Text(
+        item {
+            LazyRow(
                 modifier = Modifier
-                    .clickable() { },
-                text = "더보기",
-                style = MaterialTheme.typography.labelSmall.copy(
-                    color = AsSecondaryText,
-                )
-            )
+                    .fillMaxWidth()
+                    .padding(top = 6.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp)
+            ) {
+                items(uiState.colItemList) { item ->
+                    Image(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .size(100.dp, 150.dp)
+                            .background(AsDisable),
+                        painter = painterResource(id = item),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null
+                    )
+                }
+            }
         }
 
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 6.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(horizontal = 8.dp)
-        ) {
-            items(uiState.lastItemList) { item ->
-                WatchaPartyComponent(item = item, onClick = {})
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 26.dp, bottom = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Text(
+                    text = "왓챠 파티",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = AsWhite,
+                        fontSize = 18.sp,
+                        fontWeight = Bold
+                    )
+                )
+
+                Text(
+                    modifier = Modifier.clickable { },
+                    text = "더보기",
+                    style = MaterialTheme.typography.labelSmall.copy(color = AsSecondaryText)
+                )
+            }
+        }
+
+        item {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 6.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp)
+            ) {
+                items(uiState.lastItemList) { item ->
+                    WatchaPartyComponent(item = item, onClick = {})
+                }
             }
         }
     }
