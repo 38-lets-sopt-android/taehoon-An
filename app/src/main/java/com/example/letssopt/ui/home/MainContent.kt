@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.letssopt.R
 import com.example.letssopt.data.local.model.WatchPartyItem
+import com.example.letssopt.ui.components.InfiniteLazyRow
 import com.example.letssopt.ui.components.WatchaPartyComponent
 import com.example.letssopt.ui.theme.AsBg
 import com.example.letssopt.ui.theme.AsDisable
@@ -67,25 +69,9 @@ fun MainContent(modifier: Modifier = Modifier, uiState: MainViewModel.MainUiStat
         }
 
         item {
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(horizontal = 8.dp)
-            ) {
-                items(uiState.rowItemList) { item ->
-                    Image(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(16.dp))
-                            .size(280.dp, 160.dp)
-                            .background(AsDisable),
-                        painter = painterResource(id = item),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = null
-                    )
-                }
-            }
+            Spacer(Modifier.padding(top = 24.dp))
+
+            InfiniteLazyRow(uiState)
         }
 
         item {
