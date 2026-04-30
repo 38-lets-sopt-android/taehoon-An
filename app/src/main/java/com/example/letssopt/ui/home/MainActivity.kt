@@ -110,21 +110,21 @@ fun MainTopBar() {
         IconButton(onClick = {}) {
             Icon(
                 painter = painterResource(id = R.drawable.btn_camera),
-                contentDescription = "camera",
+                contentDescription = null,
                 tint = AsWhite
             )
         }
         IconButton(onClick = {}) {
             Icon(
                 painter = painterResource(id = R.drawable.btn_ring),
-                contentDescription = "ring",
+                contentDescription = null,
                 tint = AsWhite
             )
         }
         IconButton(onClick = {}) {
             Icon(
                 painter = painterResource(id = R.drawable.btn_profile),
-                contentDescription = "profile",
+                contentDescription = null,
                 tint = AsWhite
             )
         }
