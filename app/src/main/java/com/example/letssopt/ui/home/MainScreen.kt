@@ -1,10 +1,5 @@
 package com.example.letssopt.ui.home
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -34,29 +29,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letssopt.R
 import com.example.letssopt.ui.home.MainViewModel.SelectBottomItems
 import com.example.letssopt.ui.theme.AsBg
 import com.example.letssopt.ui.theme.AsDisable
 import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
+import kotlinx.serialization.Serializable
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        val viewModel by viewModels<MainViewModel>()
-        setContent {
-            LETSSOPTTheme {
-                MainScreen(viewModel)
-            }
-        }
-    }
-}
+@Serializable
+data object MAIN
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(
+    viewModel: MainViewModel = viewModel()
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -222,6 +211,6 @@ fun BottomTabItem(
 @Composable
 private fun MainScreenPreview() {
     LETSSOPTTheme {
-        MainScreen(MainViewModel())
+        MainScreen()
     }
 }
