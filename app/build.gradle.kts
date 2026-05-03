@@ -30,6 +30,20 @@ android {
             )
         }
     }
+    packaging {
+        resources.excludes.addAll(
+            listOf(
+                "META-INF/AL2.0",
+                "META-INF/LGPL2.1",
+                "META-INF/annotations.kotlin_builtins",
+                "META-INF/intellij-core.kotlin_builtins",
+                "META-INF/CHANGES",
+                "META-INF/README.md",
+                "META-INF/DEPENDENCIES"
+            )
+        )
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -64,4 +78,8 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+}
+
+configurations.all {
+    exclude(group = "com.intellij", module = "annotations")
 }

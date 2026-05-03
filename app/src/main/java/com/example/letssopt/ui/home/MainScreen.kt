@@ -25,27 +25,37 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letssopt.R
+import com.example.letssopt.data.local.BuyingItemDatabase
 import com.example.letssopt.ui.home.MainViewModel.SelectBottomItems
 import com.example.letssopt.ui.theme.AsBg
 import com.example.letssopt.ui.theme.AsDisable
 import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 import kotlinx.serialization.Serializable
+import kotlin.getValue
 
 @Serializable
 data object MAIN
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(
-    viewModel: MainViewModel = viewModel()
-) {
+fun MainScreen() {
+    val context = LocalContext.current
+
+    val database = BuyingItemDatabase.getDatabase(context)
+    val dao = database.buyingItemDao()
+
+    val viewModel: MainViewModel = viewModel(
+        factory = MainViewModelFactory(dao)
+    )
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -68,7 +78,7 @@ fun MainScreen(
             SelectBottomItems.CATEGORY -> BuyingContent(
                 modifier = Modifier.padding(innerPadding),
                 uiState = uiState,
-                onClick = { viewModel.saveBuyingTabCard() }
+                onClick = { item -> viewModel.saveBuyingTabCard(item) }
             )
             SelectBottomItems.WALLET -> EmptyContent(
                 modifier = Modifier.padding(innerPadding)

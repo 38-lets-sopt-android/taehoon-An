@@ -27,7 +27,7 @@ import com.example.letssopt.ui.theme.LETSSOPTTheme
 fun BuyingContent(
     modifier: Modifier = Modifier,
     uiState: MainViewModel.MainUiState,
-    onClick: () -> Unit
+    onClick: (BuyingTabCardItem) -> Unit
 ) {
     LazyVerticalGrid(
         modifier = modifier
@@ -52,7 +52,7 @@ fun BuyingContent(
         items(uiState.gridItemList) { item ->
             BuyingTabCard(
                 item = item,
-                onClick = onClick
+                onClick = { onClick(item) }
             )
         }
     }
