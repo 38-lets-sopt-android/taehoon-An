@@ -19,7 +19,7 @@ import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 @Composable
-fun DefaultButton(modifier: Modifier,
+fun DefaultButton(modifier: Modifier = Modifier,
                   text: String,
                   onClick: () -> Unit,
                   btEnabled: Boolean = true,
