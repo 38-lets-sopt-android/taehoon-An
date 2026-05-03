@@ -65,8 +65,10 @@ fun MainScreen(
                 modifier = Modifier.padding(innerPadding),
                 uiState = uiState
             )
-            SelectBottomItems.CATEGORY -> EmptyContent(
-                modifier = Modifier.padding(innerPadding)
+            SelectBottomItems.CATEGORY -> BuyingContent(
+                modifier = Modifier.padding(innerPadding),
+                uiState = uiState,
+                onClick = { viewModel.saveBuyingTabCard() }
             )
             SelectBottomItems.WALLET -> EmptyContent(
                 modifier = Modifier.padding(innerPadding)
