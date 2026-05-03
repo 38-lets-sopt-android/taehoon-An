@@ -16,7 +16,7 @@ class MainViewModel : ViewModel() {
     }
 
     data class MainUiState(
-        val selectBottomItem: SelectBottomItems?,
+        val selectBottomItem: SelectBottomItems,
         val rowItemList: List<Int> = listOf(
             R.drawable.rowmjg1,
             R.drawable.rowmjg2,
