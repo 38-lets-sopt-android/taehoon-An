@@ -181,8 +181,8 @@ fun LoginScreen(
                             account = viewModel.onGetAccount(),
                             textId = uiState.textId,
                             textPw = uiState.textPw,
+                            onSetLoggedIn = { loggedIn -> viewModel.setIsLoggedIn(loggedIn) },
                             navigateToMain = navigateToMain,
-                            viewModel = viewModel
                         )
                     }
                 )
@@ -196,8 +196,8 @@ private fun validateLogin(
     account: AccountItem,
     textId: String,
     textPw: String,
-    navigateToMain: () -> Unit,
-    viewModel: LoginViewModel
+    onSetLoggedIn: (Boolean) -> Unit = {},
+    navigateToMain: () -> Unit
 ) {
     if (account.accountId == null || account.accountPw == null) {
         Toast.makeText(context, "회원가입이 필요합니다.", Toast.LENGTH_LONG).show()
@@ -211,7 +211,7 @@ private fun validateLogin(
         Toast.makeText(context, "비밀번호가 틀렸습니다. 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
         return
     }
-    viewModel.setIsLoggedIn(true)
+    onSetLoggedIn(true)
     navigateToMain()
     Toast.makeText(context, "로그인 성공. 환영합니다. ${account.accountId} 님.", Toast.LENGTH_SHORT).show()
 }
