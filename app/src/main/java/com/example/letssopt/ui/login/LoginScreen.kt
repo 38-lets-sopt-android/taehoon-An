@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.letssopt.data.local.model.AccountItem
 import com.example.letssopt.ui.components.DefaultButton
 import com.example.letssopt.ui.components.DefaultTextField
 import com.example.letssopt.ui.theme.AsBg
@@ -177,12 +178,11 @@ fun LoginScreen(
                     onClick = {
                         validateLogin(
                             context = context,
-                            saveId = viewModel.onGetAccount().accountId,
-                            savePw = viewModel.onGetAccount().accountPw,
+                            account = viewModel.onGetAccount(),
                             textId = uiState.textId,
                             textPw = uiState.textPw,
                             navigateToMain = navigateToMain,
-                            viewModel
+                            viewModel = viewModel
                         )
                     }
                 )
@@ -193,26 +193,27 @@ fun LoginScreen(
 
 private fun validateLogin(
     context: Context,
-    saveId: String?,
-    savePw: String?,
+    account: AccountItem,
     textId: String,
     textPw: String,
     navigateToMain: () -> Unit,
     viewModel: LoginViewModel
 ) {
-    if (saveId == null || savePw == null) {
+    if (account.accountId == null || account.accountPw == null) {
         Toast.makeText(context, "회원가입이 필요합니다.", Toast.LENGTH_LONG).show()
-    } else {
-        if (saveId == textId && savePw != textPw) {
-            Toast.makeText(context, "비밀번호가 틀렸습니다. 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
-        } else if (saveId == textId && savePw == textPw) {
-            viewModel.setIsLoggedIn(true)
-            navigateToMain()
-            Toast.makeText(context, "로그인 성공. 환영합니다. $textId 님.", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(context, "로그인 실패. 다시 시도해주세요", Toast.LENGTH_SHORT).show()
-        }
+        return
     }
+    if (account.accountId != textId) {
+        Toast.makeText(context, "존재하지 않는 계정입니다.", Toast.LENGTH_SHORT).show()
+        return
+    }
+    if (account.accountPw != textPw) {
+        Toast.makeText(context, "비밀번호가 틀렸습니다. 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
+        return
+    }
+    viewModel.setIsLoggedIn(true)
+    navigateToMain()
+    Toast.makeText(context, "로그인 성공. 환영합니다. ${account.accountId} 님.", Toast.LENGTH_SHORT).show()
 }
 
 @Preview(showBackground = true)
