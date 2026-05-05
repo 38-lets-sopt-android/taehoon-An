@@ -45,7 +45,7 @@ import com.example.letssopt.ui.theme.LETSSOPTTheme
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object LOGIN
+data object Login
 
 @Composable
 fun LoginScreen(

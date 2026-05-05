@@ -39,10 +39,9 @@ import com.example.letssopt.ui.theme.AsDisable
 import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 import kotlinx.serialization.Serializable
-import kotlin.getValue
 
 @Serializable
-data object MAIN
+data object Main
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

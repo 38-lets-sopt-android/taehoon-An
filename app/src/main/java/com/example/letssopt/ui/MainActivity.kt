@@ -12,12 +12,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.example.letssopt.ui.home.MAIN
+import com.example.letssopt.ui.home.Main
 import com.example.letssopt.ui.home.MainScreen
-import com.example.letssopt.ui.login.LOGIN
+import com.example.letssopt.ui.login.Login
 import com.example.letssopt.ui.login.LoginScreen
 import com.example.letssopt.ui.login.LoginViewModel
-import com.example.letssopt.ui.signup.SIGNUP
+import com.example.letssopt.ui.signup.SignUp
 import com.example.letssopt.ui.signup.SignupScreen
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = if (viewModel.getIsLoggedIn()) MAIN else LOGIN,
+                    startDestination = if (viewModel.getIsLoggedIn()) Main else Login,
                     enterTransition = {
                         slideInHorizontally(
                             initialOffsetX = { fullWidth -> fullWidth },
@@ -59,27 +59,27 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                 ) {
-                    composable<LOGIN> {
+                    composable<Login> {
                         LoginScreen(
                             navigateToMain = {
                                 val navOptions = navOptions {
-                                    popUpTo<LOGIN> {
+                                    popUpTo<Login> {
                                         inclusive = true
                                     }
                                 }
-                                navController.navigate(MAIN, navOptions)
+                                navController.navigate(Main, navOptions)
                             },
                             navigateToSignUp = {
-                                navController.navigate(SIGNUP)
+                                navController.navigate(SignUp)
                             }
                         )
                     }
 
-                    composable<MAIN> {
+                    composable<Main> {
                         MainScreen()
                     }
 
-                    composable<SIGNUP> {
+                    composable<SignUp> {
                         SignupScreen(
                             onSignUpComplete = {
                                 navController.popBackStack()

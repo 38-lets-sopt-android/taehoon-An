@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -50,7 +51,7 @@ fun BuyingTabCard(
                 painter = painterResource(id = item.image),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxWidth()
             )
 
             Box(
@@ -83,7 +84,7 @@ fun BuyingTabCard(
 
 @Composable
 @Preview
-fun BuyingTabCardPreview() {
+private fun BuyingTabCardPreview() {
     LETSSOPTTheme {
         BuyingTabCard(
             item = BuyingTabCardItem(

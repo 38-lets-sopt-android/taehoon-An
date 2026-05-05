@@ -49,7 +49,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object SIGNUP
+data object SignUp
 
 @Composable
 fun SignupScreen(
@@ -216,9 +216,18 @@ fun SignupScreen(
                         textId = uiState.textId,
                         textPw = uiState.textPw,
                         textPwCheck = uiState.textCkPw,
-                        viewModel = viewModel,
                         onSignUpComplete = onSignUpComplete,
-                        onShowSnack = onShowSnack
+                        onShowSnack = onShowSnack,
+                        onValidationCheck = { signUpItem ->
+                            viewModel.validationCheck(
+                                signUpItem.textId,
+                                signUpItem.textPw,
+                                signUpItem.textPwCheck
+                            )
+                        },
+                        onSaveAccount = { id, pw ->
+                            viewModel.onSaveAccount(id, pw)
+                        }
                     )
 
                 },
@@ -235,19 +244,25 @@ private fun validateSignUp(
     textId: String,
     textPw: String,
     textPwCheck: String,
-    onSignUpComplete: () -> Unit = {},
+    onSignUpComplete: () -> Unit,
     onShowSnack: (String) -> Unit,
-    viewModel: SignUpViewModel
+    onSaveAccount: (id: String, pw: String) -> Unit,
+    onValidationCheck: (SignUpItem) -> Boolean,
 ) {
-    if (viewModel.validationCheck(textId, textPw, textPwCheck)
-    ) {
+    if (onValidationCheck(SignUpItem(textId, textPw, textPwCheck))) {
         Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
-        viewModel.onSaveAccount(textId, textPw)
+        onSaveAccount(textId, textPw)
         onSignUpComplete()
     } else {
         onShowSnack("회원가입에 실패했습니다. 올바른 정보를 입력해주세요.")
     }
 }
+
+data class SignUpItem(
+    var textId: String,
+    var textPw: String,
+    var textPwCheck: String
+)
 
 
 @Preview(showBackground = true)
