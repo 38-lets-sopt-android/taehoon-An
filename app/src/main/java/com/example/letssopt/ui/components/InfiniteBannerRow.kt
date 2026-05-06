@@ -15,11 +15,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.letssopt.ui.home.MainViewModel
+import com.example.letssopt.ui.home.MainUiState
 import com.example.letssopt.ui.theme.AsDisable
 
 @Composable
-fun InfiniteLazyRow(uiState: MainViewModel.MainUiState) {
+fun InfiniteLazyRow(uiState: MainUiState) {
     val itemsList = uiState.rowItemList
 
     val startIndex = Int.MAX_VALUE / 2 - (Int.MAX_VALUE / 2 % itemsList.size)

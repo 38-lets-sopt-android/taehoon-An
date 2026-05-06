@@ -39,7 +39,7 @@ import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 @Composable
-fun MainContent(modifier: Modifier = Modifier, uiState: MainViewModel.MainUiState) {
+fun MainContent(modifier: Modifier = Modifier, uiState: MainUiState) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -225,7 +225,7 @@ fun MainContent(modifier: Modifier = Modifier, uiState: MainViewModel.MainUiStat
 private fun MainContentPreview() {
     LETSSOPTTheme {
         MainContent(
-            uiState = MainViewModel.MainUiState(
+            uiState = MainUiState(
                 selectBottomItem = MainViewModel.SelectBottomItems.MAIN,
                 rowItemList = listOf(
                     R.drawable.rowmjg1,

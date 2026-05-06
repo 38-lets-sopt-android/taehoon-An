@@ -27,12 +27,12 @@ import com.example.letssopt.ui.theme.LETSSOPTTheme
 @Composable
 fun BuyingContent(
     modifier: Modifier = Modifier,
-    uiState: MainViewModel.MainUiState,
+    uiState: MainUiState,
     onClick: (BuyingTabCardItem) -> Unit
 ) {
     LazyVerticalGrid(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(color = AsBg),
         columns = GridCells.Fixed(3),
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 12.dp),
@@ -66,7 +66,7 @@ private fun BuyingContentPreview() {
     LETSSOPTTheme {
         BuyingContent(
             modifier = Modifier,
-            uiState = MainViewModel.MainUiState(
+            uiState = MainUiState(
                 selectBottomItem = MainViewModel.SelectBottomItems.CATEGORY,
                 gridItemList = listOf(
                     BuyingTabCardItem(R.drawable.colmjg1, "먼작귀 101화"),
