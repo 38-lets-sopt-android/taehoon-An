@@ -226,7 +226,7 @@ private fun MainContentPreview() {
     LETSSOPTTheme {
         MainContent(
             uiState = MainUiState(
-                selectBottomItem = MainViewModel.SelectBottomItems.MAIN,
+                selectBottomItem = SelectBottomItems.MAIN,
                 rowItemList = listOf(
                     R.drawable.rowmjg1,
                     R.drawable.rowmjg2,

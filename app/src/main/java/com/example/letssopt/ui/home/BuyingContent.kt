@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -67,7 +66,7 @@ private fun BuyingContentPreview() {
         BuyingContent(
             modifier = Modifier,
             uiState = MainUiState(
-                selectBottomItem = MainViewModel.SelectBottomItems.CATEGORY,
+                selectBottomItem = SelectBottomItems.CATEGORY,
                 gridItemList = listOf(
                     BuyingTabCardItem(R.drawable.colmjg1, "먼작귀 101화"),
                     BuyingTabCardItem(R.drawable.colmjg1, "먼작귀 101화"),

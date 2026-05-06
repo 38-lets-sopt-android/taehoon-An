@@ -3,7 +3,6 @@ package com.example.letssopt.ui.home
 import com.example.letssopt.R
 import com.example.letssopt.data.local.model.BuyingTabCardItem
 import com.example.letssopt.data.local.model.WatchPartyItem
-import com.example.letssopt.ui.home.MainViewModel.SelectBottomItems
 
 data class MainUiState(
         val selectBottomItem: SelectBottomItems,

@@ -8,12 +8,17 @@ import androidx.activity.viewModels
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.example.letssopt.data.local.BuyingItemDatabase
 import com.example.letssopt.ui.home.Main
 import com.example.letssopt.ui.home.MainScreen
+import com.example.letssopt.ui.home.MainViewModel
+import com.example.letssopt.ui.home.MainViewModelFactory
 import com.example.letssopt.ui.login.Login
 import com.example.letssopt.ui.login.LoginScreen
 import com.example.letssopt.ui.login.LoginViewModel
@@ -29,11 +34,18 @@ class MainActivity : ComponentActivity() {
         setContent {
             LETSSOPTTheme {
                 val navController = rememberNavController()
-                val viewModel by viewModels<LoginViewModel>()
+
+                val database = BuyingItemDatabase.getDatabase(LocalContext.current)
+                val dao = database.buyingItemDao()
+
+                val mainViewModel: MainViewModel = viewModel(
+                    factory = MainViewModelFactory(dao)
+                )
+                val loginViewModel by viewModels<LoginViewModel>()
 
                 NavHost(
                     navController = navController,
-                    startDestination = if (viewModel.getIsLoggedIn()) Main else Login,
+                    startDestination = if (loginViewModel.getIsLoggedIn()) Main else Login,
                     enterTransition = {
                         slideInHorizontally(
                             initialOffsetX = { fullWidth -> fullWidth },
@@ -76,7 +88,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable<Main> {
-                        MainScreen()
+                        MainScreen(viewModel = mainViewModel)
                     }
 
                     composable<SignUp> {
