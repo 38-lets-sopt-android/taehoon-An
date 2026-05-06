@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -59,6 +60,20 @@ fun LoginScreen(
     val interactionSource = remember { MutableInteractionSource() }
     //value로 직접 접근해주면 값을 못읽기에 collectAsStateWithLifecycle()을 통해 추적 가능한 관찰 객체를 만들어줌
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel.sideEffect) {
+        viewModel.sideEffect.collect { effect ->
+            when (effect) {
+                is LoginSideEffect.ShowToast -> {
+                    Toast.makeText(context, effect.message, effect.duration).show()
+                }
+                is LoginSideEffect.NavigateToMain -> {
+                    navigateToMain()
+                }
+            }
+        }
+    }
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -176,14 +191,7 @@ fun LoginScreen(
                     .padding(bottom = 10.dp),
                     text = "로그인",
                     onClick = {
-                        validateLogin(
-                            context = context,
-                            account = viewModel.onGetAccount(),
-                            textId = uiState.textId,
-                            textPw = uiState.textPw,
-                            onSetLoggedIn = { loggedIn -> viewModel.setIsLoggedIn(loggedIn) },
-                            navigateToMain = navigateToMain,
-                        )
+                        viewModel.validateLogin()
                     }
                 )
             }
@@ -191,30 +199,6 @@ fun LoginScreen(
     }
 }
 
-private fun validateLogin(
-    context: Context,
-    account: AccountItem,
-    textId: String,
-    textPw: String,
-    onSetLoggedIn: (Boolean) -> Unit = {},
-    navigateToMain: () -> Unit
-) {
-    if (account.accountId == null || account.accountPw == null) {
-        Toast.makeText(context, "회원가입이 필요합니다.", Toast.LENGTH_LONG).show()
-        return
-    }
-    if (account.accountId != textId) {
-        Toast.makeText(context, "존재하지 않는 계정입니다.", Toast.LENGTH_SHORT).show()
-        return
-    }
-    if (account.accountPw != textPw) {
-        Toast.makeText(context, "비밀번호가 틀렸습니다. 다시 확인해주세요.", Toast.LENGTH_SHORT).show()
-        return
-    }
-    onSetLoggedIn(true)
-    navigateToMain()
-    Toast.makeText(context, "로그인 성공. 환영합니다. ${account.accountId} 님.", Toast.LENGTH_SHORT).show()
-}
 
 @Preview(showBackground = true)
 @Composable
