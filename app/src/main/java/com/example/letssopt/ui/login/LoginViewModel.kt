@@ -46,7 +46,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         val currentPw = _uiState.value.textPw
 
         viewModelScope.launch {
-            if (account.accountId == null || account.accountPw == null) {
+            if (account.accountId == "" || account.accountPw == "") {
                 _sideEffect.emit(LoginSideEffect.ShowToast("회원가입이 필요합니다.", Toast.LENGTH_LONG))
                 return@launch
             }

@@ -51,7 +51,7 @@ fun BuyingTabCard(
                 painter = painterResource(id = item.image),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxSize()
             )
 
             Box(

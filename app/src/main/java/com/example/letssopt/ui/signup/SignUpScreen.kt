@@ -1,6 +1,5 @@
 package com.example.letssopt.ui.signup
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +21,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -64,12 +64,24 @@ fun SignupScreen(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
-    val onShowSnack: (String) -> Unit = { message ->
-        scope.launch {
-            snackbarHostState.showSnackbar(message)
+    LaunchedEffect(viewModel.sideEffect) {
+        viewModel.sideEffect.collect { effect ->
+            when (effect) {
+                is SignUpSideEffect.ShowToast -> {
+                    Toast.makeText(context, effect.message, effect.duration).show()
+                }
+                is SignUpSideEffect.CompleteSignUp -> {
+                    onSignUpComplete()
+                }
+                is SignUpSideEffect.ShowSnack -> {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(effect.message)
+                    }
+                }
+            }
         }
     }
 
@@ -209,28 +221,7 @@ fun SignupScreen(
                     .fillMaxWidth()
                     .padding(bottom = 10.dp, top = 20.dp),
                 "회원가입",
-                onClick = {
-
-                    validateSignUp(
-                        context = context,
-                        textId = uiState.textId,
-                        textPw = uiState.textPw,
-                        textPwCheck = uiState.textCkPw,
-                        onSignUpComplete = onSignUpComplete,
-                        onShowSnack = onShowSnack,
-                        onValidationCheck = { signUpItem ->
-                            viewModel.validationCheck(
-                                signUpItem.textId,
-                                signUpItem.textPw,
-                                signUpItem.textPwCheck
-                            )
-                        },
-                        onSaveAccount = { id, pw ->
-                            viewModel.onSaveAccount(id, pw)
-                        }
-                    )
-
-                },
+                onClick = { viewModel.validateSignUp() },
                 btEnabled = uiState.textId.isNotEmpty() &&
                         uiState.textPw.isNotEmpty() &&
                         uiState.textCkPw.isNotEmpty()
@@ -238,31 +229,6 @@ fun SignupScreen(
         }
     }
 }
-
-private fun validateSignUp(
-    context: Context,
-    textId: String,
-    textPw: String,
-    textPwCheck: String,
-    onSignUpComplete: () -> Unit,
-    onShowSnack: (String) -> Unit,
-    onSaveAccount: (id: String, pw: String) -> Unit,
-    onValidationCheck: (SignUpItem) -> Boolean,
-) {
-    if (onValidationCheck(SignUpItem(textId, textPw, textPwCheck))) {
-        Toast.makeText(context, "회원가입 성공!", Toast.LENGTH_SHORT).show()
-        onSaveAccount(textId, textPw)
-        onSignUpComplete()
-    } else {
-        onShowSnack("회원가입에 실패했습니다. 올바른 정보를 입력해주세요.")
-    }
-}
-
-data class SignUpItem(
-    var textId: String,
-    var textPw: String,
-    var textPwCheck: String
-)
 
 
 @Preview(showBackground = true)

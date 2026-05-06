@@ -1,6 +1,5 @@
 package com.example.letssopt.ui.login
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.letssopt.data.local.model.AccountItem
 import com.example.letssopt.ui.components.DefaultButton
 import com.example.letssopt.ui.components.DefaultTextField
 import com.example.letssopt.ui.theme.AsBg
@@ -73,7 +71,6 @@ fun LoginScreen(
             }
         }
     }
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -186,13 +183,12 @@ fun LoginScreen(
 
                 )
 
-                DefaultButton(modifier = Modifier
+                DefaultButton(
+                    modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 10.dp),
                     text = "로그인",
-                    onClick = {
-                        viewModel.validateLogin()
-                    }
+                    onClick = { viewModel.validateLogin() }
                 )
             }
         }
