@@ -1,4 +1,4 @@
-package com.example.letssopt.ui.home
+package com.example.letssopt.ui.home.contents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.example.letssopt.R
 import com.example.letssopt.data.local.model.BuyingTabCardItem
 import com.example.letssopt.ui.components.BuyingTabCard
+import com.example.letssopt.ui.home.MainUiState
+import com.example.letssopt.ui.home.SelectBottomItems
 import com.example.letssopt.ui.theme.AsBg
 import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
@@ -26,8 +28,8 @@ import com.example.letssopt.ui.theme.LETSSOPTTheme
 @Composable
 fun BuyingContent(
     modifier: Modifier = Modifier,
-    uiState: MainUiState,
-    onClick: (BuyingTabCardItem) -> Unit
+    onSaveBuyingCardItem: (BuyingTabCardItem) -> Unit,
+    gridItemList: List<BuyingTabCardItem>
 ) {
     LazyVerticalGrid(
         modifier = modifier
@@ -49,10 +51,10 @@ fun BuyingContent(
                 text = "개별 구매"
             )
         }
-        items(uiState.gridItemList) { item ->
+        items(gridItemList) { item ->
             BuyingTabCard(
                 item = item,
-                onClick = { onClick(item) }
+                onClick = { onSaveBuyingCardItem(item) }
             )
         }
     }
@@ -65,17 +67,14 @@ private fun BuyingContentPreview() {
     LETSSOPTTheme {
         BuyingContent(
             modifier = Modifier,
-            uiState = MainUiState(
-                selectBottomItem = SelectBottomItems.CATEGORY,
-                gridItemList = listOf(
-                    BuyingTabCardItem(R.drawable.colmjg1, "먼작귀 101화"),
-                    BuyingTabCardItem(R.drawable.colmjg1, "먼작귀 101화"),
-                    BuyingTabCardItem(R.drawable.colmjg1, "먼작귀 101화"),
-                    BuyingTabCardItem(R.drawable.colmjg1, "먼작귀 101화"),
-                    BuyingTabCardItem(R.drawable.colmjg1, "먼작귀 101화"),
-                    )
+            gridItemList = listOf(
+                BuyingTabCardItem(R.drawable.colmjg1, "먼작귀 101화"),
+                BuyingTabCardItem(R.drawable.colmjg1, "먼작귀 101화"),
+                BuyingTabCardItem(R.drawable.colmjg1, "먼작귀 101화"),
+                BuyingTabCardItem(R.drawable.colmjg1, "먼작귀 101화"),
+                BuyingTabCardItem(R.drawable.colmjg1, "먼작귀 101화"),
             ),
-            onClick = {}
+            onSaveBuyingCardItem = {}
         )
     }
 }

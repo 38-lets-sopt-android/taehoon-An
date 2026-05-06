@@ -1,4 +1,4 @@
-package com.example.letssopt.ui.home
+package com.example.letssopt.ui.home.contents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

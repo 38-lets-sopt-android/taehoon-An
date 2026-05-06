@@ -16,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.example.letssopt.data.local.BuyingItemDatabase
 import com.example.letssopt.ui.home.Main
-import com.example.letssopt.ui.home.MainScreen
+import com.example.letssopt.ui.home.MainRoute
 import com.example.letssopt.ui.home.MainViewModel
 import com.example.letssopt.ui.home.MainViewModelFactory
 import com.example.letssopt.ui.login.Login
@@ -88,7 +88,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable<Main> {
-                        MainScreen(viewModel = mainViewModel)
+                        MainRoute(viewModel = mainViewModel)
                     }
 
                     composable<SignUp> {

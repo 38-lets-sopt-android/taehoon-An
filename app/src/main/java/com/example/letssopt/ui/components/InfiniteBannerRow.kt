@@ -19,8 +19,7 @@ import com.example.letssopt.ui.home.MainUiState
 import com.example.letssopt.ui.theme.AsDisable
 
 @Composable
-fun InfiniteLazyRow(uiState: MainUiState) {
-    val itemsList = uiState.rowItemList
+fun InfiniteLazyRow(itemsList: List<Int>) {
 
     val startIndex = Int.MAX_VALUE / 2 - (Int.MAX_VALUE / 2 % itemsList.size)
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = startIndex)
