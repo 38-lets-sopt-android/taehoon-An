@@ -52,17 +52,9 @@ import kotlinx.serialization.Serializable
 data object SignUp
 
 @Composable
-fun SignupScreen(
-    modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = viewModel(),
-    onSignUpComplete: () -> Unit = {}
-) {
-    val context = LocalContext.current
-
-    val focusManager = LocalFocusManager.current
-    val scrollState = rememberScrollState()
-
+fun SignUpRoute(viewModel: SignUpViewModel = viewModel(), onNavigateUp: () -> Unit) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -73,9 +65,11 @@ fun SignupScreen(
                 is SignUpSideEffect.ShowToast -> {
                     Toast.makeText(context, effect.message, effect.duration).show()
                 }
+
                 is SignUpSideEffect.CompleteSignUp -> {
-                    onSignUpComplete()
+                    onNavigateUp()
                 }
+
                 is SignUpSideEffect.ShowSnack -> {
                     scope.launch {
                         snackbarHostState.showSnackbar(effect.message)
@@ -84,6 +78,38 @@ fun SignupScreen(
             }
         }
     }
+
+    SignupScreen(
+        uiState = uiState, // 임시
+        snackbarHostState = snackbarHostState,
+        onIdChange = { id -> viewModel.onChangedId(id) },
+        onPwChange = { pw -> viewModel.onChangedPw(pw) },
+        onCkPwChange = { ckPw -> viewModel.onChangedCkPw(ckPw) },
+        onNameChange = { name -> viewModel.onChangedName(name) },
+        onEmailChange = { email -> viewModel.onChangedEmail(email) },
+        onAgeChange = { age -> viewModel.onChangedAge(age) },
+        onPartChange = { part -> viewModel.onChangedPart(part) },
+        onSignUpClick = { viewModel.validateSignUp()}
+    )
+
+}
+
+@Composable
+fun SignupScreen(
+    uiState: SignUpUiState,
+    modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState,
+    onIdChange: (String) -> Unit,
+    onPwChange: (String) -> Unit,
+    onCkPwChange: (String) -> Unit,
+    onNameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onAgeChange: (String) -> Unit,
+    onPartChange: (String) -> Unit,
+    onSignUpClick: () -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+    val scrollState = rememberScrollState()
 
     Scaffold(
         snackbarHost = {
@@ -141,7 +167,7 @@ fun SignupScreen(
                     text = "회원가입",
                     color = AsWhite
                 )
-                //텍스트필드 섹션
+                //아이디 섹션
                 Text(
                     modifier = Modifier
                         .padding(top = 28.dp),
@@ -155,7 +181,7 @@ fun SignupScreen(
                         .fillMaxWidth()
                         .padding(top = 4.dp),
                     text = uiState.textId,
-                    onValueChange = { viewModel.onChangedId(it) },
+                    onValueChange = { onIdChange(it) },
                     hint = "이메일 주소를 입력하세요",
                     tfVisible = true,
                     keyboardOptions = KeyboardOptions(
@@ -166,6 +192,8 @@ fun SignupScreen(
                         onNext = { focusManager.moveFocus(FocusDirection.Down) }
                     )
                 )
+
+                // 비밀번호 섹션
                 Text(
                     style = MaterialTheme.typography.labelSmall,
                     text = "비밀번호",
@@ -178,7 +206,7 @@ fun SignupScreen(
                         .fillMaxWidth()
                         .padding(top = 4.dp),
                     text = uiState.textPw,
-                    onValueChange = { viewModel.onChangedPw(it) },
+                    onValueChange = { onPwChange(it) },
                     hint = "비밀번호를 입력하세요",
                     tfVisible = false,
                     keyboardOptions = KeyboardOptions(
@@ -190,6 +218,7 @@ fun SignupScreen(
                     )
                 )
 
+                // 비밀번호 체크 섹션
                 Text(
                     modifier = Modifier
                         .padding(top = 12.dp),
@@ -203,7 +232,7 @@ fun SignupScreen(
                         .fillMaxWidth()
                         .padding(top = 4.dp),
                     text = uiState.textCkPw,
-                    onValueChange = { viewModel.onChangedCkPw(it) },
+                    onValueChange = { onCkPwChange(it) },
                     hint = "비밀번호를 다시 입력하세요",
                     tfVisible = false,
                     keyboardOptions = KeyboardOptions(
@@ -214,6 +243,110 @@ fun SignupScreen(
                         onDone = { focusManager.clearFocus() }
                     )
                 )
+
+                // 이름 섹션
+                Text(
+                    modifier = Modifier
+                        .padding(top = 12.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    text = "이름",
+                    color = AsSecondaryText
+                )
+
+                DefaultTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    text = uiState.textName,
+                    onValueChange = { onNameChange(it) },
+                    hint = "이름을 입력하세요",
+                    tfVisible = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                    )
+                )
+
+                // 이메일 섹션
+                Text(
+                    modifier = Modifier
+                        .padding(top = 12.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    text = "이메일",
+                    color = AsSecondaryText
+                )
+
+                DefaultTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    text = uiState.textEmail,
+                    onValueChange = { onEmailChange(it) },
+                    hint = "이메일 주소를 입력하세요",
+                    tfVisible = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                    )
+                )
+
+                // 나이 섹션
+                Text(
+                    modifier = Modifier
+                        .padding(top = 12.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    text = "나이",
+                    color = AsSecondaryText
+                )
+
+                DefaultTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    text = uiState.textAge,
+                    onValueChange = { onAgeChange(it) },
+                    hint = "나이를 입력하세요",
+                    tfVisible = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                    )
+                )
+
+                // 파트 섹션
+                Text(
+                    modifier = Modifier
+                        .padding(top = 12.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    text = "파트",
+                    color = AsSecondaryText
+                )
+
+                DefaultTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    text = uiState.textPart,
+                    onValueChange = { onPartChange(it) },
+                    hint = "파트를 입력하세요(ex. 안드로이드, IOS..)",
+                    tfVisible = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                    )
+                )
             }
             // 이쪽 부분에선 래핑해줬던 레이아웃 제거
             DefaultButton(
@@ -221,7 +354,7 @@ fun SignupScreen(
                     .fillMaxWidth()
                     .padding(bottom = 10.dp, top = 20.dp),
                 "회원가입",
-                onClick = { viewModel.validateSignUp() },
+                onClick = { onSignUpClick() },
                 btEnabled = uiState.textId.isNotEmpty() &&
                         uiState.textPw.isNotEmpty() &&
                         uiState.textCkPw.isNotEmpty()
@@ -235,6 +368,20 @@ fun SignupScreen(
 @Composable
 private fun SignupContentPreview() {
     LETSSOPTTheme {
-        SignupScreen()
+        SignupScreen(
+            uiState = SignUpUiState(
+                textId = "test@sopt.org",
+                textName = "안태훈"
+            ),
+            snackbarHostState = remember { SnackbarHostState() },
+            onIdChange = {},
+            onPwChange = {},
+            onCkPwChange = {},
+            onNameChange = {},
+            onEmailChange = {},
+            onAgeChange = {},
+            onPartChange = {},
+            onSignUpClick = {}
+        )
     }
 }

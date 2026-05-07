@@ -24,6 +24,7 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
     // 외부에서 접근할 수 있는 변수, 단 실질적으로 변화시킬 순 없기에 _uiState로 참조해주면서 동시에 asStateFlow() 함수로 잠굼
     // 외부에서 접근하기에 public
     val uiState = _uiState.asStateFlow()
+
     private val prefManager = PreferenceManager(application)
 
     fun onChangedId(newId : String) {
@@ -36,6 +37,22 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
 
     fun onChangedCkPw(newCkPw : String) {
         _uiState.update { it.copy(textCkPw = newCkPw) }
+    }
+
+    fun onChangedName(newName: String) {
+        _uiState.update { it.copy(textName = newName) }
+    }
+
+    fun onChangedEmail(newEmail: String) {
+        _uiState.update { it.copy(textEmail = newEmail) }
+    }
+
+    fun onChangedAge(newAge: String) {
+        _uiState.update { it.copy(textAge = newAge) }
+    }
+
+    fun onChangedPart(newPart: String) {
+        _uiState.update { it.copy(textPart = newPart) }
     }
 
     fun validationCheck(textId: String, textPw: String, textPwCheck: String): Boolean {

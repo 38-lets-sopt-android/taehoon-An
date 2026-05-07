@@ -23,6 +23,8 @@ import com.example.letssopt.ui.login.Login
 import com.example.letssopt.ui.login.LoginScreen
 import com.example.letssopt.ui.login.LoginViewModel
 import com.example.letssopt.ui.signup.SignUp
+import com.example.letssopt.ui.signup.SignUpRoute
+import com.example.letssopt.ui.signup.SignUpViewModel
 import com.example.letssopt.ui.signup.SignupScreen
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
@@ -42,6 +44,7 @@ class MainActivity : ComponentActivity() {
                     factory = MainViewModelFactory(dao)
                 )
                 val loginViewModel by viewModels<LoginViewModel>()
+                val signUpViewModel by viewModels<SignUpViewModel>()
 
                 NavHost(
                     navController = navController,
@@ -92,11 +95,9 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable<SignUp> {
-                        SignupScreen(
-                            onSignUpComplete = {
-                                navController.popBackStack()
-                            }
-                        )
+                        SignUpRoute() {
+                            navController.popBackStack()
+                        }
                     }
 
                 }
