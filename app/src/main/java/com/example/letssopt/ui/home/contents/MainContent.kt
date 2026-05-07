@@ -1,4 +1,4 @@
-package com.example.letssopt.ui.home
+package com.example.letssopt.ui.home.contents
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,7 +39,12 @@ import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 @Composable
-fun MainContent(modifier: Modifier = Modifier, uiState: MainViewModel.MainUiState) {
+fun MainContent(
+    modifier: Modifier = Modifier,
+    rowItemList: List<Int>,
+    colItemList: List<Int>,
+    lastItemList: List<WatchPartyItem>
+    ) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -71,7 +76,7 @@ fun MainContent(modifier: Modifier = Modifier, uiState: MainViewModel.MainUiStat
         item {
             Spacer(Modifier.padding(top = 24.dp))
 
-            InfiniteLazyRow(uiState)
+            InfiniteLazyRow(rowItemList)
         }
 
         item {
@@ -118,7 +123,7 @@ fun MainContent(modifier: Modifier = Modifier, uiState: MainViewModel.MainUiStat
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(horizontal = 8.dp)
             ) {
-                items(uiState.colItemList) { item ->
+                items(colItemList) { item ->
                     Image(
                         modifier = Modifier
                             .clip(RoundedCornerShape(10.dp))
@@ -165,7 +170,7 @@ fun MainContent(modifier: Modifier = Modifier, uiState: MainViewModel.MainUiStat
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(horizontal = 8.dp)
             ) {
-                items(uiState.colItemList) { item ->
+                items(colItemList) { item ->
                     Image(
                         modifier = Modifier
                             .clip(RoundedCornerShape(10.dp))
@@ -212,7 +217,7 @@ fun MainContent(modifier: Modifier = Modifier, uiState: MainViewModel.MainUiStat
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(horizontal = 8.dp)
             ) {
-                items(uiState.lastItemList) { item ->
+                items(lastItemList) { item ->
                     WatchaPartyComponent(item = item, onClick = {})
                 }
             }
@@ -225,8 +230,6 @@ fun MainContent(modifier: Modifier = Modifier, uiState: MainViewModel.MainUiStat
 private fun MainContentPreview() {
     LETSSOPTTheme {
         MainContent(
-            uiState = MainViewModel.MainUiState(
-                selectBottomItem = MainViewModel.SelectBottomItems.MAIN,
                 rowItemList = listOf(
                     R.drawable.rowmjg1,
                     R.drawable.rowmjg2,
@@ -256,6 +259,5 @@ private fun MainContentPreview() {
                     )
                 )
             )
-        )
     }
 }

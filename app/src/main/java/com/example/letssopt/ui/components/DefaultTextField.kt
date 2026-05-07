@@ -21,7 +21,7 @@ import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 @Composable
 fun DefaultTextField(
-     modifier: Modifier,
+     modifier: Modifier = Modifier,
      text: String,
      onValueChange: (String) -> Unit,
      hint: String,

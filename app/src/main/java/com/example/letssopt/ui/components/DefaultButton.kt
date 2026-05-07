@@ -19,13 +19,14 @@ import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 @Composable
-fun DefaultButton(modifier: Modifier,
-                  text: String,
-                  onClick: () -> Unit,
-                  btEnabled: Boolean = true,
+fun DefaultButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    onClick: () -> Unit,
+    btEnabled: Boolean = true,
 ) {
     Button(
-        onClick = onClick,
+        onClick = { onClick() },
         modifier = modifier
             .fillMaxWidth()
             .height(52.dp),
@@ -49,6 +50,6 @@ fun DefaultButton(modifier: Modifier,
 @Composable
 private fun DefaultButtonPreview() {
     LETSSOPTTheme {
-        DefaultButton(Modifier, "임시 버튼", onClick = {}, false)
+        DefaultButton(Modifier, "임시 버튼", onClick = {},false)
     }
 }

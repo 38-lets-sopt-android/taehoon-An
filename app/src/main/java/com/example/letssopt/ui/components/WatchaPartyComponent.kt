@@ -40,7 +40,6 @@ fun WatchaPartyComponent(
 ) {
     Box(
         modifier = modifier
-            .clickable(onClick = onClick)
             .size(196.dp, 185.dp)
             .paint(
                 painterResource(id = item.image),
@@ -54,7 +53,7 @@ fun WatchaPartyComponent(
                 .align(Alignment.TopEnd)
                 .clip(CircleShape)
                 .background(AsWhite)
-                .clickable { onClick },
+                .clickable(onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
             Icon(

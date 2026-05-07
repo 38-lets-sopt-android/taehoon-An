@@ -2,19 +2,23 @@ package com.example.letssopt.ui.signup
 
 import android.app.Application
 import android.util.Patterns
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.letssopt.data.local.PreferenceManager
 import com.example.letssopt.data.local.model.AccountItem
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class SignUpViewModel(application: Application) : AndroidViewModel(application) {
-    data class SignUpUiState(
-        val textId : String = "",
-        val textPw : String = "",
-        val textCkPw : String = ""
-    )
+    // SideEffect
+    private val _sideEffect = MutableSharedFlow<SignUpSideEffect>()
+    val sideEffect = _sideEffect.asSharedFlow()
+
     // ViewModel 내부에서만 값을 변화시키도록 하는 독립적인(실질적인) 변수 DataClass = private
     private val _uiState = MutableStateFlow(SignUpUiState())
     // 외부에서 접근할 수 있는 변수, 단 실질적으로 변화시킬 순 없기에 _uiState로 참조해주면서 동시에 asStateFlow() 함수로 잠굼
@@ -40,8 +44,24 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
             textPw == textPwCheck
     }
 
-    fun onSaveAccount(saveId : String, savePw : String) = prefManager.setAccount(AccountItem(saveId, savePw))
+    private fun onSaveAccount(saveId : String, savePw : String) = prefManager.setAccount(AccountItem(saveId, savePw))
 
+    fun validateSignUp() {
+        val textId = _uiState.value.textId
+        val textPw = _uiState.value.textPw
+        val textPwCheck = _uiState.value.textCkPw
+
+        viewModelScope.launch {
+            if (validationCheck(textId, textPw, textPwCheck)) {
+                onSaveAccount(textId, textPw)
+                _sideEffect.emit(SignUpSideEffect.ShowToast("회원가입 성공!", Toast.LENGTH_SHORT))
+                _sideEffect.emit(SignUpSideEffect.CompleteSignUp)
+            } else {
+                _sideEffect.emit(SignUpSideEffect.ShowSnack("회원가입에 실패했습니다. 올바른 정보를 입력해주세요."))
+            }
+        }
+
+    }
 
 }
 
