@@ -9,10 +9,5 @@ data class SignUpUiState(
     val textAge: String = "",
     val textPart: String = "",
 
-    val signUpStatus: SignUpStatus = SignUpStatus.Idle
+    val signUpStatus: EventStatus = EventStatus.Idle
 )
-
-sealed class SignUpStatus {
-    object Idle : SignUpStatus()
-    object Loading : SignUpStatus()
-}

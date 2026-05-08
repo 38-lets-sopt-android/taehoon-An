@@ -349,7 +349,7 @@ fun SignUpScreen(
                     )
                 )
             }
-            if (uiState.signUpStatus is SignUpStatus.Loading) {
+            if (uiState.signUpStatus is EventStatus.Loading) {
                 CircularProgressIndicator()
             } else {
                 // 이쪽 부분에선 래핑해줬던 레이아웃 제거

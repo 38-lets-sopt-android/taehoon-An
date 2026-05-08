@@ -82,7 +82,7 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
         }
 
         viewModelScope.launch {
-            _uiState.update { it.copy(signUpStatus = SignUpStatus.Loading) }
+            _uiState.update { it.copy(signUpStatus = EventStatus.Loading) }
 
             runCatching {
                 RetrofitClient.apiService.signUp(
@@ -90,19 +90,19 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
                 )
             }.onSuccess { response ->
                 if (response.isSuccessful) {
-                    _uiState.update { it.copy(signUpStatus = SignUpStatus.Idle) }
+                    _uiState.update { it.copy(signUpStatus = EventStatus.Idle) }
 
                     onSaveAccount(textId, textPw)
                     _sideEffect.emit(SignUpSideEffect.ShowToast("회원가입 성공!", Toast.LENGTH_SHORT))
                     _sideEffect.emit(SignUpSideEffect.CompleteSignUp)
                 } else {
-                    _uiState.update { it.copy(signUpStatus = SignUpStatus.Idle) }
+                    _uiState.update { it.copy(signUpStatus = EventStatus.Idle) }
 
                     val message = "회원가입 실패 (코드: ${response.code()})"
                     _sideEffect.emit(SignUpSideEffect.ShowSnack(message))
                 }
             }.onFailure { e ->
-                _uiState.update { it.copy(signUpStatus = SignUpStatus.Idle) }
+                _uiState.update { it.copy(signUpStatus = EventStatus.Idle) }
 
                 val errorMessage = e.message ?: "네트워크 오류가 발생했습니다"
                 _sideEffect.emit(SignUpSideEffect.ShowSnack(errorMessage))
