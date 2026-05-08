@@ -1,12 +1,9 @@
 package com.example.letssopt.ui.signup
 
-import android.app.Application
 import android.util.Patterns
 import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.letssopt.core.local.PreferenceManager
-import com.example.letssopt.core.local.model.AccountItem
 import com.example.letssopt.core.local.retrofit.RetrofitClient
 import com.example.letssopt.core.local.retrofit.SignUpRequest
 import com.example.letssopt.ui.util.EventStatus
@@ -17,8 +14,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SignUpViewModel(application: Application) : AndroidViewModel(application) {
+class SignUpViewModel() : ViewModel() {
     // SideEffect
+
     private val _sideEffect = MutableSharedFlow<SignUpSideEffect>()
     val sideEffect = _sideEffect.asSharedFlow()
 
@@ -27,8 +25,6 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
     // 외부에서 접근할 수 있는 변수, 단 실질적으로 변화시킬 순 없기에 _uiState로 참조해주면서 동시에 asStateFlow() 함수로 잠굼
     // 외부에서 접근하기에 public
     val uiState = _uiState.asStateFlow()
-
-    private val prefManager = PreferenceManager(application)
 
     fun onChangedId(newId : String) {
        _uiState.update { it.copy(textId = newId) }
@@ -96,7 +92,7 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
                 } else {
                     _uiState.update { it.copy(signUpStatus = EventStatus.Idle) }
 
-                    val message = "회원가입 실패 (코드: ${response.code()})"
+                    val message = "회원가입 실패 (코드: ${response.errorBody()?.string()})"
                     _sideEffect.emit(SignUpSideEffect.ShowSnack(message))
                 }
             }.onFailure { e ->

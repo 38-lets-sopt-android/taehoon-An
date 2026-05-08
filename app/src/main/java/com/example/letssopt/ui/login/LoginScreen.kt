@@ -49,17 +49,14 @@ import kotlinx.serialization.Serializable
 data object Login
 
 @Composable
-fun LoginScreen(
+fun LoginRoute(
     viewModel: LoginViewModel = viewModel(),
-    navigateToMain: () -> Unit = {},
-    navigateToSignUp: () -> Unit = {}
+    navigateToMain: () -> Unit,
+    navigateToSignUp: () -> Unit
 ) {
-    val context = LocalContext.current
-    val focusManager = LocalFocusManager.current
-    val scrollState = rememberScrollState()
-    val interactionSource = remember { MutableInteractionSource() }
-    //value로 직접 접근해주면 값을 못읽기에 collectAsStateWithLifecycle()을 통해 추적 가능한 관찰 객체를 만들어줌
+//value로 직접 접근해주면 값을 못읽기에 collectAsStateWithLifecycle()을 통해 추적 가능한 관찰 객체를 만들어줌
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     LaunchedEffect(viewModel.sideEffect) {
         viewModel.sideEffect.collect { effect ->
@@ -73,6 +70,28 @@ fun LoginScreen(
             }
         }
     }
+
+    LoginScreen(
+        uiState = uiState,
+        onIdChange = { viewModel.onChangedId(it) },
+        onPwChange = { viewModel.onChangedPw(it) },
+        onLoginClick = { viewModel.validateLogin() },
+        onSignUpClick = navigateToSignUp
+    )
+}
+
+@Composable
+fun LoginScreen(
+    uiState: LoginUiState,
+    modifier: Modifier = Modifier,
+    onIdChange: (String) -> Unit,
+    onPwChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onSignUpClick: () -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+    val scrollState = rememberScrollState()
+    val interactionSource = remember { MutableInteractionSource() }
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -127,7 +146,7 @@ fun LoginScreen(
                         .fillMaxWidth()
                         .padding(top = 4.dp),
                     text = uiState.textId,
-                    onValueChange = { viewModel.onChangedId(it) },
+                    onValueChange = { onIdChange(it) },
                     hint = "이메일 주소를 입력하세요",
                     tfVisible = true,
                     keyboardOptions = KeyboardOptions(
@@ -152,7 +171,7 @@ fun LoginScreen(
                         .fillMaxWidth()
                         .padding(top = 4.dp),
                     text = uiState.textPw,
-                    onValueChange = { viewModel.onChangedPw(it) },
+                    onValueChange = { onPwChange(it) },
                     hint = "비밀번호를 입력하세요",
                     tfVisible = false,
                     keyboardOptions = KeyboardOptions(
@@ -181,7 +200,7 @@ fun LoginScreen(
                             .clickable(
                                 interactionSource = interactionSource,
                                 indication = null,
-                                onClick = navigateToSignUp
+                                onClick = onSignUpClick
                             )
                             .padding(bottom = 10.dp, top = 10.dp),
                         style = MaterialTheme.typography.labelSmall,
@@ -195,7 +214,7 @@ fun LoginScreen(
                             .fillMaxWidth()
                             .padding(bottom = 10.dp),
                         text = "로그인",
-                        onClick = { viewModel.validateLogin() }
+                        onClick = { onLoginClick() }
                     )
                 }
             }
@@ -208,6 +227,15 @@ fun LoginScreen(
 @Composable
 private fun LoginContentPreview() {
     LETSSOPTTheme {
-        LoginScreen()
+        LoginScreen(
+            uiState = LoginUiState(
+                textId = "",
+                textPw = ""
+            ),
+            onIdChange = {},
+            onPwChange = {},
+            onLoginClick = {},
+            onSignUpClick = {}
+        )
     }
 }

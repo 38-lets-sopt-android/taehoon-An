@@ -20,11 +20,10 @@ import com.example.letssopt.ui.home.MainRoute
 import com.example.letssopt.ui.home.MainViewModel
 import com.example.letssopt.ui.home.MainViewModelFactory
 import com.example.letssopt.ui.login.Login
-import com.example.letssopt.ui.login.LoginScreen
+import com.example.letssopt.ui.login.LoginRoute
 import com.example.letssopt.ui.login.LoginViewModel
 import com.example.letssopt.ui.signup.SignUp
 import com.example.letssopt.ui.signup.SignUpRoute
-import com.example.letssopt.ui.signup.SignUpViewModel
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 
@@ -73,7 +72,7 @@ class MainActivity : ComponentActivity() {
                     },
                 ) {
                     composable<Login> {
-                        LoginScreen(
+                        LoginRoute(
                             navigateToMain = {
                                 val navOptions = navOptions {
                                     popUpTo<Login> {

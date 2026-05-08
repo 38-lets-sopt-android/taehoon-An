@@ -66,7 +66,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 } else {
                     _uiState.update { it.copy(loginStatus = EventStatus.Idle) }
 
-                    val message = "로그인 실패 (코드: ${response.code()})"
+                    val message = "${response.errorBody()?.string()} (코드: ${response.code()})"
                     _sideEffect.emit(LoginSideEffect.ShowToast(message, Toast.LENGTH_SHORT))
                 }
             }.onFailure { e ->
