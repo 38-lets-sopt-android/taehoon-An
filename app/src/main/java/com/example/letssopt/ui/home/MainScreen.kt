@@ -65,7 +65,9 @@ fun MainScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            MainTopBar()
+            if (uiState.selectBottomItem != SelectBottomItems.CATEGORY) {
+                MainTopBar()
+            }
         },
         bottomBar = {
             MainBottomBar(

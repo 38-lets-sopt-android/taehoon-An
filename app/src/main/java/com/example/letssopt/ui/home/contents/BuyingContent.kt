@@ -41,7 +41,7 @@ fun BuyingContent(
         item(span = { GridItemSpan(maxLineSpan) }) {
             Text(
                 modifier = Modifier
-                    .padding(top = 24.dp, start = 8.dp, bottom = 30.dp),
+                    .padding(top = 70.dp, start = 8.dp, bottom = 30.dp),
                 style = MaterialTheme.typography.titleMedium.copy(
                     color = AsWhite,
                     fontWeight = Bold
