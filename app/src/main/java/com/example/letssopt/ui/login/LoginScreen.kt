@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,6 +42,7 @@ import com.example.letssopt.ui.theme.AsPrimary
 import com.example.letssopt.ui.theme.AsSecondaryText
 import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
+import com.example.letssopt.ui.util.EventStatus
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -163,33 +165,39 @@ fun LoginScreen(
                 )
             }
 
-            //여기 두번쨰 컬럼에서 지정하지도 않은 padding이 양쪽 너비에 들어가서 로그인 버튼이 이상한 패딩이 적용됨
-            Column(modifier = Modifier
-                .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
-            ) {
 
-                Text(modifier = Modifier
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null,
-                        onClick = navigateToSignUp
-                    )
-                    .padding(bottom = 10.dp, top = 10.dp),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = AsSecondaryText,
-                    text = "아직 계정이 없으신가요? 회원가입"
-
-                )
-
-                DefaultButton(
+            if (uiState.loginStatus is EventStatus.Loading) {
+                CircularProgressIndicator()
+            } else {//여기 두번쨰 컬럼에서 지정하지도 않은 padding이 양쪽 너비에 들어가서 로그인 버튼이 이상한 패딩이 적용됨
+                Column(
                     modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp),
-                    text = "로그인",
-                    onClick = { viewModel.validateLogin() }
-                )
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+
+                    Text(
+                        modifier = Modifier
+                            .clickable(
+                                interactionSource = interactionSource,
+                                indication = null,
+                                onClick = navigateToSignUp
+                            )
+                            .padding(bottom = 10.dp, top = 10.dp),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = AsSecondaryText,
+                        text = "아직 계정이 없으신가요? 회원가입"
+
+                    )
+
+                    DefaultButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 10.dp),
+                        text = "로그인",
+                        onClick = { viewModel.validateLogin() }
+                    )
+                }
             }
         }
     }

@@ -46,6 +46,7 @@ import com.example.letssopt.ui.theme.AsSecondaryText
 import com.example.letssopt.ui.theme.AsSurface
 import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
+import com.example.letssopt.ui.util.EventStatus
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 

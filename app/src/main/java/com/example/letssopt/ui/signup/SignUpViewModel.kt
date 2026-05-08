@@ -9,6 +9,7 @@ import com.example.letssopt.core.local.PreferenceManager
 import com.example.letssopt.core.local.model.AccountItem
 import com.example.letssopt.core.local.retrofit.RetrofitClient
 import com.example.letssopt.core.local.retrofit.SignUpRequest
+import com.example.letssopt.ui.util.EventStatus
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow

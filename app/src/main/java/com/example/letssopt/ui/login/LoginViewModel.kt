@@ -5,6 +5,9 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.letssopt.core.local.PreferenceManager
+import com.example.letssopt.core.local.retrofit.LoginRequest
+import com.example.letssopt.core.local.retrofit.RetrofitClient
+import com.example.letssopt.ui.util.EventStatus
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -40,31 +43,39 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun validateLogin() {
-        val account = prefManager.getAccount()
         val currentId = _uiState.value.textId
         val currentPw = _uiState.value.textPw
 
         viewModelScope.launch {
-            if (account.accountId == "" || account.accountPw == "") {
-                _sideEffect.emit(LoginSideEffect.ShowToast("회원가입이 필요합니다.", Toast.LENGTH_LONG))
-                return@launch
-            }
-            if (account.accountId != currentId) {
-                _sideEffect.emit(LoginSideEffect.ShowToast("존재하지 않는 계정입니다.", Toast.LENGTH_SHORT))
-                return@launch
-            }
-            if (account.accountPw != currentPw) {
-                _sideEffect.emit(LoginSideEffect.ShowToast("비밀번호가 틀렸습니다. 다시 확인해주세요.", Toast.LENGTH_SHORT))
-                return@launch
-            }
+            _uiState.update { it.copy(loginStatus = EventStatus.Loading) }
 
-            prefManager.setIsLoggedIn(true)
+            runCatching {
+                RetrofitClient.apiService.signIn(
+                    LoginRequest(
+                        currentId,
+                        currentPw
+                    )
+                )
+            }.onSuccess { response ->
+                if (response.isSuccessful) {
+                    _uiState.update { it.copy(loginStatus = EventStatus.Idle) }
 
-            _sideEffect.emit(LoginSideEffect.ShowToast("로그인 성공. 환영합니다. ${account.accountId} 님.", Toast.LENGTH_SHORT))
-            _sideEffect.emit(LoginSideEffect.NavigateToMain)
+                    _sideEffect.emit(LoginSideEffect.ShowToast("로그인 성공!", Toast.LENGTH_SHORT))
+                    _sideEffect.emit(LoginSideEffect.NavigateToMain)
+                } else {
+                    _uiState.update { it.copy(loginStatus = EventStatus.Idle) }
+
+                    val message = "로그인 실패 (코드: ${response.code()})"
+                    _sideEffect.emit(LoginSideEffect.ShowToast(message, Toast.LENGTH_SHORT))
+                }
+            }.onFailure { e ->
+                _uiState.update { it.copy(loginStatus = EventStatus.Idle) }
+
+                val errorMessage = e.message ?: "네트워크 오류가 발생했습니다"
+                _sideEffect.emit(LoginSideEffect.ShowToast(errorMessage, Toast.LENGTH_SHORT))
+            }
         }
     }
-
 
 
 }
