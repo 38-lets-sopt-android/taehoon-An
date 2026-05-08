@@ -45,13 +45,17 @@ import kotlinx.serialization.Serializable
 data object Main
 
 @Composable
-fun MainRoute(viewModel: MainViewModel = viewModel()) {
+fun MainRoute(
+    viewModel: MainViewModel = viewModel(),
+    onNavigateToProfile: () -> Unit
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     MainScreen(
         uiState,
         onItemSelected = { newItem -> viewModel.onSelectBottomItem(newItem) },
-        onSaveBuyingCardItem = { item -> viewModel.saveBuyingTabCard(item) }
+        onSaveBuyingCardItem = { item -> viewModel.saveBuyingTabCard(item) },
+        onProfileClick = { onNavigateToProfile() }
     )
 }
 
@@ -60,13 +64,16 @@ fun MainRoute(viewModel: MainViewModel = viewModel()) {
 fun MainScreen(
     uiState: MainUiState,
     onItemSelected: (SelectBottomItems) -> Unit,
-    onSaveBuyingCardItem: (BuyingTabCardItem) -> Unit
+    onSaveBuyingCardItem: (BuyingTabCardItem) -> Unit,
+    onProfileClick: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             if (uiState.selectBottomItem != SelectBottomItems.CATEGORY) {
-                MainTopBar()
+                MainTopBar(
+                    onProfileClick = { onProfileClick() }
+                )
             }
         },
         bottomBar = {
@@ -110,7 +117,9 @@ fun MainScreen(
 }
 
 @Composable
-fun MainTopBar() {
+fun MainTopBar(
+    onProfileClick: () -> Unit = {}
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -135,7 +144,7 @@ fun MainTopBar() {
                 tint = AsWhite
             )
         }
-        IconButton(onClick = {}) {
+        IconButton(onClick = { onProfileClick() }) {
             Icon(
                 painter = painterResource(id = R.drawable.btn_profile),
                 contentDescription = null,
@@ -241,7 +250,8 @@ private fun MainContentPreview() {
                 selectBottomItem = SelectBottomItems.MAIN
             ),
             onItemSelected = {},
-            onSaveBuyingCardItem = {}
+            onSaveBuyingCardItem = {},
+            onProfileClick = {}
         )
     }
 }
@@ -255,7 +265,8 @@ private fun CategoryContentPreview() {
                 selectBottomItem = SelectBottomItems.CATEGORY
             ),
             onItemSelected = {},
-            onSaveBuyingCardItem = {}
+            onSaveBuyingCardItem = {},
+            onProfileClick = {}
         )
     }
 }

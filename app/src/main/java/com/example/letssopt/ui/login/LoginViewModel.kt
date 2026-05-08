@@ -61,7 +61,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     _uiState.update { it.copy(loginStatus = EventStatus.Idle) }
 
                     prefManager.setIsLoggedIn(true)
-                    prefManager.setId(response.body()?.code?.toInt())
+                    prefManager.setId(response.body()?.data?.userId)
                     _sideEffect.emit(LoginSideEffect.ShowToast("로그인 성공!", Toast.LENGTH_SHORT))
                     _sideEffect.emit(LoginSideEffect.NavigateToMain)
                 } else {

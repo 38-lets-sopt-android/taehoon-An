@@ -94,7 +94,7 @@ fun LoginScreen(
     val interactionSource = remember { MutableInteractionSource() }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) { innerPadding ->
         //전반적인 레이아웃
         Column(

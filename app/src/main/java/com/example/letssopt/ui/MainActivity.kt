@@ -88,7 +88,12 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable<Main> {
-                        MainRoute(viewModel = mainViewModel)
+                        MainRoute(
+                            viewModel = mainViewModel,
+                            onNavigateToProfile = {
+//                                navController.navigate()
+                            }
+                        )
                     }
 
                     composable<SignUp> {
