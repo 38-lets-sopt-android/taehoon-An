@@ -5,8 +5,10 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.letssopt.data.local.PreferenceManager
-import com.example.letssopt.data.local.model.AccountItem
+import com.example.letssopt.core.local.PreferenceManager
+import com.example.letssopt.core.local.model.AccountItem
+import com.example.letssopt.core.local.retrofit.RetrofitClient
+import com.example.letssopt.core.local.retrofit.SignUpRequest
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -55,10 +57,11 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
         _uiState.update { it.copy(textPart = newPart) }
     }
 
-    fun validationCheck(textId: String, textPw: String, textPwCheck: String): Boolean {
+    private fun validationCheck(textId: String, textPw: String, textPwCheck: String, textEmail: String): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(textId).matches() &&
             textPw.length in 8..12 &&
-            textPw == textPwCheck
+            textPw == textPwCheck &&
+                Patterns.EMAIL_ADDRESS.matcher(textEmail).matches()
     }
 
     private fun onSaveAccount(saveId : String, savePw : String) = prefManager.setAccount(AccountItem(saveId, savePw))
@@ -66,15 +69,43 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
     fun validateSignUp() {
         val textId = _uiState.value.textId
         val textPw = _uiState.value.textPw
-        val textPwCheck = _uiState.value.textCkPw
+        val textCkPw = _uiState.value.textCkPw
+        val textName = _uiState.value.textName
+        val textEmail = _uiState.value.textEmail
+        val textAge = _uiState.value.textAge
+        val textPart = _uiState.value.textPart
+
+        if(!validationCheck(textId, textPw, textCkPw, textEmail)) {
+            val message = "회원가입 조건에 부합하지 않습니다. 다시 시도해주세요."
+            viewModelScope.launch { _sideEffect.emit(SignUpSideEffect.ShowSnack(message)) }
+            return
+        }
 
         viewModelScope.launch {
-            if (validationCheck(textId, textPw, textPwCheck)) {
-                onSaveAccount(textId, textPw)
-                _sideEffect.emit(SignUpSideEffect.ShowToast("회원가입 성공!", Toast.LENGTH_SHORT))
-                _sideEffect.emit(SignUpSideEffect.CompleteSignUp)
-            } else {
-                _sideEffect.emit(SignUpSideEffect.ShowSnack("회원가입에 실패했습니다. 올바른 정보를 입력해주세요."))
+            _uiState.update { it.copy(signUpStatus = SignUpStatus.Loading) }
+
+            runCatching {
+                RetrofitClient.apiService.signUp(
+                    SignUpRequest(textId, textPw, textName, textEmail, textAge.toIntOrNull() ?: -1, textPart)
+                )
+            }.onSuccess { response ->
+                if (response.isSuccessful) {
+                    _uiState.update { it.copy(signUpStatus = SignUpStatus.Idle) }
+
+                    onSaveAccount(textId, textPw)
+                    _sideEffect.emit(SignUpSideEffect.ShowToast("회원가입 성공!", Toast.LENGTH_SHORT))
+                    _sideEffect.emit(SignUpSideEffect.CompleteSignUp)
+                } else {
+                    _uiState.update { it.copy(signUpStatus = SignUpStatus.Idle) }
+
+                    val message = "회원가입 실패 (코드: ${response.code()})"
+                    _sideEffect.emit(SignUpSideEffect.ShowSnack(message))
+                }
+            }.onFailure { e ->
+                _uiState.update { it.copy(signUpStatus = SignUpStatus.Idle) }
+
+                val errorMessage = e.message ?: "네트워크 오류가 발생했습니다"
+                _sideEffect.emit(SignUpSideEffect.ShowSnack(errorMessage))
             }
         }
 

@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letssopt.R
-import com.example.letssopt.data.local.model.BuyingTabCardItem
+import com.example.letssopt.core.local.model.BuyingTabCardItem
 import com.example.letssopt.ui.home.contents.BuyingContent
 import com.example.letssopt.ui.home.contents.EmptyContent
 import com.example.letssopt.ui.home.contents.MainContent

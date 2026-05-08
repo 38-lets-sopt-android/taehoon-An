@@ -1,7 +1,7 @@
-package com.example.letssopt.data.local
+package com.example.letssopt.core.local
 
 import android.content.Context
-import com.example.letssopt.data.local.model.AccountItem
+import com.example.letssopt.core.local.model.AccountItem
 
 class PreferenceManager(context : Context) {
     private val sharedPreference = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)

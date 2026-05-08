@@ -14,7 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.example.letssopt.data.local.BuyingItemDatabase
+import com.example.letssopt.core.local.BuyingItemDatabase
 import com.example.letssopt.ui.home.Main
 import com.example.letssopt.ui.home.MainRoute
 import com.example.letssopt.ui.home.MainViewModel
@@ -25,7 +25,6 @@ import com.example.letssopt.ui.login.LoginViewModel
 import com.example.letssopt.ui.signup.SignUp
 import com.example.letssopt.ui.signup.SignUpRoute
 import com.example.letssopt.ui.signup.SignUpViewModel
-import com.example.letssopt.ui.signup.SignupScreen
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 

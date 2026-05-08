@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -79,7 +80,7 @@ fun SignUpRoute(viewModel: SignUpViewModel = viewModel(), onNavigateUp: () -> Un
         }
     }
 
-    SignupScreen(
+    SignUpScreen(
         uiState = uiState, // 임시
         snackbarHostState = snackbarHostState,
         onIdChange = { id -> viewModel.onChangedId(id) },
@@ -95,7 +96,7 @@ fun SignUpRoute(viewModel: SignUpViewModel = viewModel(), onNavigateUp: () -> Un
 }
 
 @Composable
-fun SignupScreen(
+fun SignUpScreen(
     uiState: SignUpUiState,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState,
@@ -237,7 +238,7 @@ fun SignupScreen(
                     tfVisible = false,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
+                        imeAction = ImeAction.Next
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = { focusManager.clearFocus() }
@@ -341,24 +342,32 @@ fun SignupScreen(
                     tfVisible = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next
+                        imeAction = ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
                         onNext = { focusManager.moveFocus(FocusDirection.Down) }
                     )
                 )
             }
-            // 이쪽 부분에선 래핑해줬던 레이아웃 제거
-            DefaultButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp, top = 20.dp),
-                "회원가입",
-                onClick = { onSignUpClick() },
-                btEnabled = uiState.textId.isNotEmpty() &&
-                        uiState.textPw.isNotEmpty() &&
-                        uiState.textCkPw.isNotEmpty()
-            )
+            if (uiState.signUpStatus is SignUpStatus.Loading) {
+                CircularProgressIndicator()
+            } else {
+                // 이쪽 부분에선 래핑해줬던 레이아웃 제거
+                DefaultButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp, top = 20.dp),
+                    "회원가입",
+                    onClick = { onSignUpClick() },
+                    btEnabled = uiState.textId.isNotEmpty() &&
+                            uiState.textPw.isNotEmpty() &&
+                            uiState.textCkPw.isNotEmpty() &&
+                            uiState.textName.isNotEmpty() &&
+                            uiState.textEmail.isNotEmpty() &&
+                            uiState.textAge.isNotEmpty() &&
+                            uiState.textPart.isNotEmpty()
+                )
+            }
         }
     }
 }
@@ -366,9 +375,9 @@ fun SignupScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun SignupContentPreview() {
+private fun SignUpContentPreview() {
     LETSSOPTTheme {
-        SignupScreen(
+        SignUpScreen(
             uiState = SignUpUiState(
                 textId = "test@sopt.org",
                 textName = "안태훈"

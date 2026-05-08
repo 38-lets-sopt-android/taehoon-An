@@ -1,4 +1,4 @@
-package com.example.letssopt.data.local
+package com.example.letssopt.core.local
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

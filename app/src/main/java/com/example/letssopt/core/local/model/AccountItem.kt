@@ -1,4 +1,4 @@
-package com.example.letssopt.data.local.model
+package com.example.letssopt.core.local.model
 
 import androidx.compose.runtime.Immutable
 

@@ -7,5 +7,12 @@ data class SignUpUiState(
     val textName: String = "",
     val textEmail: String = "",
     val textAge: String = "",
-    val textPart: String = ""
+    val textPart: String = "",
+
+    val signUpStatus: SignUpStatus = SignUpStatus.Idle
 )
+
+sealed class SignUpStatus {
+    object Idle : SignUpStatus()
+    object Loading : SignUpStatus()
+}
