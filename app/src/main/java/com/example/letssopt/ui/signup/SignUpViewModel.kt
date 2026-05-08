@@ -65,8 +65,6 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
                 Patterns.EMAIL_ADDRESS.matcher(textEmail).matches()
     }
 
-    private fun onSaveAccount(saveId : String, savePw : String) = prefManager.setAccount(AccountItem(saveId, savePw))
-
     fun validateSignUp() {
         val textId = _uiState.value.textId
         val textPw = _uiState.value.textPw
@@ -93,7 +91,6 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
                 if (response.isSuccessful) {
                     _uiState.update { it.copy(signUpStatus = EventStatus.Idle) }
 
-                    onSaveAccount(textId, textPw)
                     _sideEffect.emit(SignUpSideEffect.ShowToast("회원가입 성공!", Toast.LENGTH_SHORT))
                     _sideEffect.emit(SignUpSideEffect.CompleteSignUp)
                 } else {

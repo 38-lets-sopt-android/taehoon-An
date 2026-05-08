@@ -43,7 +43,6 @@ class MainActivity : ComponentActivity() {
                     factory = MainViewModelFactory(dao)
                 )
                 val loginViewModel by viewModels<LoginViewModel>()
-                val signUpViewModel by viewModels<SignUpViewModel>()
 
                 NavHost(
                     navController = navController,
