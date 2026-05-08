@@ -1,14 +1,13 @@
 package com.example.letssopt.core.local
 
 import android.content.Context
-import com.example.letssopt.core.local.model.AccountItem
 
 class PreferenceManager(context: Context) {
     private val sharedPreference = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
-    fun setId(id: Int) {
+    fun setId(id: Int?) {
         sharedPreference.edit()
-            .putInt(KEY_ID, id)
+            .putInt(KEY_ID, id ?: -1)
             .apply()
     }
 
