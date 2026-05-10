@@ -19,6 +19,8 @@ import com.example.letssopt.ui.home.Main
 import com.example.letssopt.ui.home.MainRoute
 import com.example.letssopt.ui.home.MainViewModel
 import com.example.letssopt.ui.home.MainViewModelFactory
+import com.example.letssopt.ui.home.profile.Profile
+import com.example.letssopt.ui.home.profile.ProfileRoute
 import com.example.letssopt.ui.login.Login
 import com.example.letssopt.ui.login.LoginRoute
 import com.example.letssopt.ui.login.LoginViewModel
@@ -91,7 +93,7 @@ class MainActivity : ComponentActivity() {
                         MainRoute(
                             viewModel = mainViewModel,
                             onNavigateToProfile = {
-//                                navController.navigate()
+//                                navController.navigate(Profile)
                             }
                         )
                     }
@@ -100,6 +102,10 @@ class MainActivity : ComponentActivity() {
                         SignUpRoute() {
                             navController.popBackStack()
                         }
+                    }
+
+                    composable<Profile> {
+                        ProfileRoute()
                     }
 
                 }
