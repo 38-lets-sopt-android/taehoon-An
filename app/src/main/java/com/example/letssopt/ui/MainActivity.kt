@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
                         MainRoute(
                             viewModel = mainViewModel,
                             onNavigateToProfile = {
-//                                navController.navigate(Profile)
+                                navController.navigate(Profile)
                             }
                         )
                     }

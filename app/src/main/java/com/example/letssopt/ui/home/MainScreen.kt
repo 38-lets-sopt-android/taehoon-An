@@ -51,7 +51,6 @@ fun MainRoute(
     onNavigateToProfile: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val topBarState by remember {mutableStateOf(false)}
 
     MainScreen(
         uiState,
