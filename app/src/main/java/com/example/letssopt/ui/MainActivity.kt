@@ -14,16 +14,21 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.example.letssopt.data.local.BuyingItemDatabase
+import com.example.letssopt.core.local.BuyingItemDatabase
+import com.example.letssopt.core.local.PreferenceManager
 import com.example.letssopt.ui.home.Main
 import com.example.letssopt.ui.home.MainRoute
 import com.example.letssopt.ui.home.MainViewModel
 import com.example.letssopt.ui.home.MainViewModelFactory
+import com.example.letssopt.ui.home.profile.Profile
+import com.example.letssopt.ui.home.profile.ProfileRoute
+import com.example.letssopt.ui.home.profile.ProfileViewModel
+import com.example.letssopt.ui.home.profile.ProfileViewModelFactory
 import com.example.letssopt.ui.login.Login
-import com.example.letssopt.ui.login.LoginScreen
+import com.example.letssopt.ui.login.LoginRoute
 import com.example.letssopt.ui.login.LoginViewModel
 import com.example.letssopt.ui.signup.SignUp
-import com.example.letssopt.ui.signup.SignupScreen
+import com.example.letssopt.ui.signup.SignUpRoute
 import com.example.letssopt.ui.theme.LETSSOPTTheme
 
 
@@ -37,11 +42,15 @@ class MainActivity : ComponentActivity() {
 
                 val database = BuyingItemDatabase.getDatabase(LocalContext.current)
                 val dao = database.buyingItemDao()
+                val prefManager = PreferenceManager(LocalContext.current)
 
                 val mainViewModel: MainViewModel = viewModel(
                     factory = MainViewModelFactory(dao)
                 )
                 val loginViewModel by viewModels<LoginViewModel>()
+                val profileViewModel: ProfileViewModel = viewModel(
+                    factory = ProfileViewModelFactory(prefManager)
+                )
 
                 NavHost(
                     navController = navController,
@@ -72,7 +81,7 @@ class MainActivity : ComponentActivity() {
                     },
                 ) {
                     composable<Login> {
-                        LoginScreen(
+                        LoginRoute(
                             navigateToMain = {
                                 val navOptions = navOptions {
                                     popUpTo<Login> {
@@ -88,14 +97,23 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable<Main> {
-                        MainRoute(viewModel = mainViewModel)
+                        MainRoute(
+                            viewModel = mainViewModel,
+                            onNavigateToProfile = {
+                                navController.navigate(Profile)
+                            }
+                        )
                     }
 
                     composable<SignUp> {
-                        SignupScreen(
-                            onSignUpComplete = {
-                                navController.popBackStack()
-                            }
+                        SignUpRoute() {
+                            navController.popBackStack()
+                        }
+                    }
+
+                    composable<Profile> {
+                        ProfileRoute(
+                            viewModel = profileViewModel
                         )
                     }
 

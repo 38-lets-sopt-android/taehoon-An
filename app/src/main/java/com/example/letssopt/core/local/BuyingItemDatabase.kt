@@ -1,4 +1,4 @@
-package com.example.letssopt.data.local
+package com.example.letssopt.core.local
 
 import android.content.Context
 import androidx.room.Database

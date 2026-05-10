@@ -22,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letssopt.R
-import com.example.letssopt.data.local.model.BuyingTabCardItem
+import com.example.letssopt.core.local.model.BuyingTabCardItem
 import com.example.letssopt.ui.home.contents.BuyingContent
 import com.example.letssopt.ui.home.contents.EmptyContent
 import com.example.letssopt.ui.home.contents.MainContent
@@ -45,13 +46,17 @@ import kotlinx.serialization.Serializable
 data object Main
 
 @Composable
-fun MainRoute(viewModel: MainViewModel = viewModel()) {
+fun MainRoute(
+    viewModel: MainViewModel = viewModel(),
+    onNavigateToProfile: () -> Unit
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     MainScreen(
         uiState,
         onItemSelected = { newItem -> viewModel.onSelectBottomItem(newItem) },
-        onSaveBuyingCardItem = { item -> viewModel.saveBuyingTabCard(item) }
+        onSaveBuyingCardItem = { item -> viewModel.saveBuyingTabCard(item) },
+        onProfileClick = { onNavigateToProfile() }
     )
 }
 
@@ -60,12 +65,17 @@ fun MainRoute(viewModel: MainViewModel = viewModel()) {
 fun MainScreen(
     uiState: MainUiState,
     onItemSelected: (SelectBottomItems) -> Unit,
-    onSaveBuyingCardItem: (BuyingTabCardItem) -> Unit
+    onSaveBuyingCardItem: (BuyingTabCardItem) -> Unit,
+    onProfileClick: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            MainTopBar()
+            if (uiState.selectBottomItem != SelectBottomItems.CATEGORY) {
+                MainTopBar(
+                    onProfileClick = { onProfileClick() }
+                )
+            }
         },
         bottomBar = {
             MainBottomBar(
@@ -108,7 +118,9 @@ fun MainScreen(
 }
 
 @Composable
-fun MainTopBar() {
+fun MainTopBar(
+    onProfileClick: () -> Unit = {}
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -133,7 +145,7 @@ fun MainTopBar() {
                 tint = AsWhite
             )
         }
-        IconButton(onClick = {}) {
+        IconButton(onClick = { onProfileClick() }) {
             Icon(
                 painter = painterResource(id = R.drawable.btn_profile),
                 contentDescription = null,
@@ -239,7 +251,8 @@ private fun MainContentPreview() {
                 selectBottomItem = SelectBottomItems.MAIN
             ),
             onItemSelected = {},
-            onSaveBuyingCardItem = {}
+            onSaveBuyingCardItem = {},
+            onProfileClick = {}
         )
     }
 }
@@ -253,7 +266,8 @@ private fun CategoryContentPreview() {
                 selectBottomItem = SelectBottomItems.CATEGORY
             ),
             onItemSelected = {},
-            onSaveBuyingCardItem = {}
+            onSaveBuyingCardItem = {},
+            onProfileClick = {}
         )
     }
 }

@@ -2,7 +2,7 @@ package com.example.letssopt.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.letssopt.data.local.BuyingItemDao
+import com.example.letssopt.core.local.BuyingItemDao
 
 class MainViewModelFactory(
     private val dao: BuyingItemDao

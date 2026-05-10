@@ -1,4 +1,4 @@
-package com.example.letssopt.data.local
+package com.example.letssopt.core.local
 
 import androidx.room.Dao
 import androidx.room.Insert

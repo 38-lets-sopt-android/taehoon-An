@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.letssopt.R
-import com.example.letssopt.data.local.model.WatchPartyItem
+import com.example.letssopt.core.local.model.WatchPartyItem
 import com.example.letssopt.ui.components.InfiniteLazyRow
 import com.example.letssopt.ui.components.WatchaPartyComponent
 import com.example.letssopt.ui.theme.AsBg

@@ -17,10 +17,8 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.letssopt.R
-import com.example.letssopt.data.local.model.BuyingTabCardItem
+import com.example.letssopt.core.local.model.BuyingTabCardItem
 import com.example.letssopt.ui.components.BuyingTabCard
-import com.example.letssopt.ui.home.MainUiState
-import com.example.letssopt.ui.home.SelectBottomItems
 import com.example.letssopt.ui.theme.AsBg
 import com.example.letssopt.ui.theme.AsWhite
 import com.example.letssopt.ui.theme.LETSSOPTTheme
@@ -43,7 +41,7 @@ fun BuyingContent(
         item(span = { GridItemSpan(maxLineSpan) }) {
             Text(
                 modifier = Modifier
-                    .padding(top = 24.dp, start = 8.dp, bottom = 30.dp),
+                    .padding(top = 70.dp, start = 8.dp, bottom = 30.dp),
                 style = MaterialTheme.typography.titleMedium.copy(
                     color = AsWhite,
                     fontWeight = Bold

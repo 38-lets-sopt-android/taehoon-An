@@ -12,6 +12,9 @@ androidxComposeNavigation = "2.8.9"
 kotlinxSerializationJson = "1.8.1"
 room = "2.6.1"
 ksp = "2.0.21-1.0.28"
+retrofit = "2.11.0"
+okhttp = "4.12.0"
+retrofitKotlinxSerializationConverter = "1.0.0"
 
 
 [libraries]
@@ -34,6 +37,9 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+retrofit-converter-kotlinx-serialization = { group ="com.jakewharton.retrofit", name ="retrofit2-kotlinx-serialization-converter", version.ref ="retrofitKotlinxSerializationConverter" }
 
 
 [plugins]
